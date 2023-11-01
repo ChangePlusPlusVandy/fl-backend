@@ -1,12 +1,12 @@
 import express, { Application, Request, Response } from "express";
-import dotenv from "dotenv";
 import cors from "cors";
 import mongoose from "mongoose";
+import "dotenv/config";
 
-dotenv.config();
+mongoose.connect(process.env.MONGO_URI || "");
 
 const app: Application = express();
-const PORT: number = parseInt(process.env.PORT || "3001", 10);
+const PORT: number = parseInt(process.env.PORT || "3001");
 
 app.use(cors()); // Allow cross-origin requests (for frontend to communicate with backend on different ports/address)
 app.use(express.json()); // Parses incoming JSON requests and puts the parsed data in req
