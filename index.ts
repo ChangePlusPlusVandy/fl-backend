@@ -13,7 +13,7 @@ app.use(express.json()); // Parses incoming JSON requests and puts the parsed da
 app.use(express.urlencoded({ extended: true })); // Parses incoming requests with urlencoded payloads
 
 app.get("/", (req: Request, res: Response) => {
-  res.send("Hello, World!");
+  res.status(200).json({ status: "healthy" });
 });
 
 app.listen(PORT, () => {
