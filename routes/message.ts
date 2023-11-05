@@ -1,6 +1,5 @@
 import express from "express";
+import { getAllMessages } from "../controllers/message-controller"
 export const messageRouter = express.Router();
-
-const { getAllMessages } = require("../controllers/message-controller.ts");
 
 messageRouter.get("/", getAllMessages);

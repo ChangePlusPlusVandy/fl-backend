@@ -1,5 +1,5 @@
 import express from "express";
-export const userRouter = express.Router();
-const { getAllUsers } = require("../controllers/user-controller.ts");
+import { getAllFriends } from "../controllers/friend-controller";
+export const friendRouter = express.Router();
 
-userRouter.get("/", getAllUsers);
+friendRouter.get("/", getAllFriends);

@@ -1,5 +1,5 @@
 import express from "express";
 export const chatRouter = express.Router();
-const { getAllUsers } = require("../controllers/chat-controller.ts");
+import { getAllChats } from "../controllers/chat-controller";
 
-chatRouter.get("/", getAllUsers);
+chatRouter.get("/", getAllChats);

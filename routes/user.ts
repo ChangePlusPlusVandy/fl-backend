@@ -1,5 +1,6 @@
 import express from "express";
+import { getAllUsers } from "../controllers/user-controller";
+
 export const userRouter = express.Router();
-const { getAllUsers } = require("../controllers/user-controller.ts");
 
 userRouter.get("/", getAllUsers);
