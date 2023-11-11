@@ -1,5 +1,7 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 
-export const getAllReports = async (req: Request, res: Response) => {
-  res.send("getAllReports works");
-};
+export const findReports = async (request: Request, response: Response) => {
+
+}
+
+export const showReport =

@@ -6,7 +6,9 @@ import { CommonErrors } from "../utils/common-errors";
 // @TODO: add filtering
 export const findUsers = async (request: Request, response: Response) => {
   try {
-    const users = await User.find({});
+    const { filters } = request.body;
+
+    const users = await User.find(filters ?? {});
 
     return response
       .status(200)
