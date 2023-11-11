@@ -1,5 +1,4 @@
-import mongoose, {Document, Schema, Types} from "mongoose";
-import { Report } from "../types/database";
+import mongoose from "mongoose";
 
 const reportSchema = new mongoose.Schema({
     friendId: {
@@ -13,6 +12,5 @@ const reportSchema = new mongoose.Schema({
       type: Date
     }
   });
-const ReportModel = mongoose.model<Report>('Report', reportSchema);
 
-export default ReportModel;
+export const Report = mongoose.model('Report', reportSchema);
