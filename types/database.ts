@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 
 export interface User extends Document {
   name: string;
+  emailAddress: string
+  forgotPasswordCode: string
   type: string;
   posts: mongoose.Types.ObjectId[];
   timestamp: Date;
