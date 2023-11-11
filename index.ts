@@ -31,10 +31,10 @@ app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
 
-app.use("/attendance", verifyToken, attendanceRouter);
+app.use("/attendance", attendanceRouter);
 app.use("/chat", chatRouter);
 app.use("/friend", friendRouter);
 app.use("/message", messageRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);
-app.use("/user", userRouter);
+app.use("/user", verifyToken, userRouter);

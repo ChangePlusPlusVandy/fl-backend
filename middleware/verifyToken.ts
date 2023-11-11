@@ -3,15 +3,15 @@ import { auth } from "../firebase-config";
 import "dotenv/config";
 
 export const verifyToken = async (
-  req: Request,
-  _res: Response,
+  request: Request,
+  response: Response,
   next: NextFunction
 ) => {
   try {
-    const token = req?.headers?.authorization?.split(" ")[1];
+    const token = request?.headers?.authorization?.split(" ")[1];
 
     if (!token) {
-      throw new Error("Token not found");
+      return response.status(401).json({ error: "Unauthorized" });
     }
 
     // Verifies the token and decodes it to get associated user data
@@ -19,7 +19,7 @@ export const verifyToken = async (
     const decodeValue = await auth.verifyIdToken(token);
 
     if (!decodeValue) {
-      throw new Error("Token verification failed");
+      return response.status(403).json({ error: "Forbidden" });
     }
 
     next();
