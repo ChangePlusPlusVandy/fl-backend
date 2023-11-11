@@ -1,3 +1,4 @@
 export const CommonErrors = {
-  NotFound: 'Not Found'
+  NotFound: 'Not Found',
+  BadRequest: 'Bad Request'
 };

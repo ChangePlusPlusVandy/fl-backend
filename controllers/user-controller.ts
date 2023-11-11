@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.model";
+import { CommonErrors } from "../utils/common-errors";
 
 // GET /
 // @TODO: add filtering
@@ -24,7 +25,7 @@ export const showUser = async (request: Request, response: Response) => {
   if (!userId) {
     return response
       .status(404)
-      .json({ error: 'Not found' });
+      .json({ error: CommonErrors.NotFound });
   }
 
   try {
@@ -81,7 +82,7 @@ export const updateUser = async (request: Request, response: Response) => {
     if (!user) {
       return response
         .status(404)
-        .json({ error: 'Not found' });
+        .json({ error: CommonErrors.NotFound });
     }
 
     const replacement = new User(request.body);
@@ -113,7 +114,7 @@ export const deleteUser = async (request: Request, response: Response) => {
   if (!userId) {
     return response
       .status(400)
-      .json({ error: 'Invalid User ID' });
+      .json({ error: CommonErrors.BadRequest });
   }
 
   try {
@@ -122,7 +123,7 @@ export const deleteUser = async (request: Request, response: Response) => {
     if (!user) {
       return response
         .status(400)
-        .json({ error: 'Not found' });
+        .json({ error: CommonErrors.NotFound });
     }
 
     const result = await User.deleteOne({ _id: user._id });
