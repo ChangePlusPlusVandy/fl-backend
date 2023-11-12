@@ -1,7 +1,6 @@
-import mongoose, { Schema } from "mongoose";
-import { Post } from "../types/database";
+import mongoose from "mongoose";
 
-const attendanceSchema: Schema = new Schema(
+const attendanceSchema = new mongoose.Schema(
   {
     date: {
       type: Date,
@@ -22,3 +21,5 @@ const attendanceSchema: Schema = new Schema(
     timestamps: true,
   }
 );
+
+export const Attendance = mongoose.model('Attendance', attendanceSchema);

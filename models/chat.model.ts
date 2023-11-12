@@ -1,5 +1,4 @@
-import mongoose, {Document, Schema, Types} from "mongoose";
-import { Chat } from "../types/database";
+import mongoose from "mongoose";
 
 const chatSchema = new mongoose.Schema({
     users: [{
@@ -11,7 +10,5 @@ const chatSchema = new mongoose.Schema({
       ref: 'Message'
     }]
   });
-const ChatModel = mongoose.model<Chat>('Chat', chatSchema);
 
-export default ChatModel;
-  
+export const Chat = mongoose.model('Chat', chatSchema);
