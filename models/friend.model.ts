@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IFriend } from "../types/database";
 
-const friendSchema = new mongoose.Schema({
+const friendSchema = new mongoose.Schema<IFriend>({
     friendName: {
         type: String,
         required: true,
@@ -23,6 +24,6 @@ const friendSchema = new mongoose.Schema({
     timestamps: true
 });
 
-export const Friend = mongoose.model('Friend', friendSchema);
+export const Friend = mongoose.model<IFriend>('Friend', friendSchema);
 
 

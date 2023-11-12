@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IAttendance } from "../types/database";
 
-const attendanceSchema = new mongoose.Schema(
+const attendanceSchema = new mongoose.Schema<IAttendance>(
   {
     date: {
       type: Date,
@@ -22,4 +23,4 @@ const attendanceSchema = new mongoose.Schema(
   }
 );
 
-export const Attendance = mongoose.model('Attendance', attendanceSchema);
+export const Attendance = mongoose.model<IAttendance>('Attendance', attendanceSchema);

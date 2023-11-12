@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IChat } from "../types/database";
 
-const chatSchema = new mongoose.Schema({
+const chatSchema = new mongoose.Schema<IChat>({
     users: [{
       type: mongoose.Schema.Types.ObjectId,
       ref: 'User'
@@ -11,4 +12,4 @@ const chatSchema = new mongoose.Schema({
     }]
   });
 
-export const Chat = mongoose.model('Chat', chatSchema);
+export const Chat = mongoose.model<IChat>('Chat', chatSchema);
