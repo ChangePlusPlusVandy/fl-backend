@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 
-export interface User extends Document {
+export interface IUser extends Document {
   name: string;
   emailAddress: string
   forgotPasswordCode: string
@@ -11,7 +11,7 @@ export interface User extends Document {
   chats: mongoose.Types.ObjectId[];
 }
 
-export interface Post extends Document {
+export interface IPost extends Document {
   userId: mongoose.Types.ObjectId;
   user: string;
   title: string;
@@ -21,33 +21,33 @@ export interface Post extends Document {
   dateCreated: Date;
 }
 
-export interface Message extends Document {
+export interface IMessage extends Document {
   messageBody: string;
   timestamps: Date;
   sender: mongoose.Types.ObjectId;
   recipient: mongoose.Types.ObjectId;
 }
 
-export interface Friend extends Document {
+export interface IFriend extends Document {
   friendName: string;
   profilePicture: string;
   reports: mongoose.Types.ObjectId[];
   attendance: mongoose.Types.ObjectId[];
 }
 
-export interface Chat extends Document {
+export interface IChat extends Document {
   users: mongoose.Types.ObjectId[];
   messages: mongoose.Types.ObjectId[];
 }
 
-export interface Attendance extends Document {
+export interface IAttendance extends Document {
   date: Date;
   friendIds: mongoose.Types.ObjectId;
   timeIns: Date[];
   timeOuts: Date[];
 }
 
-export interface Report extends Document {
+export interface IReport extends Document {
   friendId: mongoose.Types.ObjectId;
   reportBody: string;
   date: Date;
