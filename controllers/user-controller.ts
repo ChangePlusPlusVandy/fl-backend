@@ -50,7 +50,7 @@ export const createUser = async (request: Request, response: Response) => {
 
     const validation = user.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response
         .status(400)
         .json({ error: validation.message });
@@ -74,8 +74,8 @@ export const updateUser = async (request: Request, response: Response) => {
 
   if (!userId) {
     return response
-      .status(404)
-      .json({ error: 'Invalid User ID' });
+      .status(400)
+      .json({ error: CommonErrors.BadRequest });
   }
 
   try {
@@ -91,13 +91,13 @@ export const updateUser = async (request: Request, response: Response) => {
 
     const validation = replacement.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response
         .status(400)
         .json({ error: validation.message });
     }
 
-    const result = await User.replaceOne({ _id: userId }, replacement);
+    const result = await User.updateOne({ _id: userId }, request.body);
 
     return response
       .status(204)
