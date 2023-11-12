@@ -1,34 +1,40 @@
 import mongoose from "mongoose";
 import { IPost } from "../types/database";
 
-const postSchema = new mongoose.Schema<IPost>({
+const postSchema = new mongoose.Schema<IPost>(
+  {
     userId: {
-        type: mongoose.Types.ObjectId
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "User",
     },
     user: {
-        type: String,
-        required: true,
-        trim: true
+      type: String,
+      required: true,
+      trim: true,
     },
     title: {
-        type: String
+      type: String,
     },
     postBody: {
-        type: String
+      type: String,
     },
     image: {
-        type: String
-        //figure this out later
+      type: String,
+      //figure this out later
     },
-    likes: [{
-        type: mongoose.Types.ObjectId
-    }],
+    likes: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+      },
+    ],
     dateCreated: {
-        type: Date,
-        default: Date.now
+      type: Date,
+      default: Date.now,
     },
-}, {
+  },
+  {
     timestamps: true,
-});
+  }
+);
 
-export const Post = mongoose.model<IPost>('Post', postSchema);
+export const Post = mongoose.model<IPost>("Post", postSchema);

@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   posts: [
     {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Post",
     },
   ],
@@ -22,13 +22,13 @@ const userSchema = new mongoose.Schema<IUser>({
   },
   friends: [
     {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     },
   ],
   chats: [
     {
-      type: mongoose.Types.ObjectId,
+      type: mongoose.Schema.Types.ObjectId,
       ref: "Chat",
     },
   ],
