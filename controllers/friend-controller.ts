@@ -1,11 +1,14 @@
 import express, { Request, Response } from "express";
 import { Friend } from "../models/friend.model";
+import { CommonErrors } from "../utils/common-errors";
 
 // GET /
 // @TODO: add filtering
 export const findFriends = async (request: Request, response: Response) => {
+  const { filter } = request.body;
+
   try {
-    const friends = await Friend.find({});
+    const friends = await Friend.find(filter ?? {});
 
     return response.status(200).json(friends);
   } catch (e) {
@@ -18,7 +21,7 @@ export const showFriend = async (request: Request, response: Response) => {
   const { friendId } = request.params;
 
   if (!friendId) {
-    return response.status(404).json({ error: "Not found" });
+    return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
   try {
@@ -62,8 +65,8 @@ export const updateFriend = async (request: Request, response: Response) => {
 
   if (!friendId) {
     return response
-      .status(404)
-      .json({ error: 'Invalid Friend ID' });
+      .status(400)
+      .json({ error: CommonErrors.BadRequest });
   }
 
   try {
@@ -72,7 +75,7 @@ export const updateFriend = async (request: Request, response: Response) => {
     if (!friend) {
       return response
         .status(404)
-        .json({ error: 'Not found' });
+        .json({ error: CommonErrors.NotFound });
     }
 
     const replacement = new Friend(request.body);
@@ -105,7 +108,7 @@ export const deleteFriend = async (request: Request, response: Response) => {
   if (!friendId) {
     return response
       .status(400)
-      .json({ error: 'Invalid Friend ID' });
+      .json({ error: CommonErrors.BadRequest });
   }
 
   try {
@@ -113,8 +116,8 @@ export const deleteFriend = async (request: Request, response: Response) => {
 
     if (!friend) {
       return response
-        .status(400)
-        .json({ error: 'Not found' });
+        .status(404)
+        .json({ error: CommonErrors.BadRequest });
     }
 
     const result = await Friend.deleteOne({ _id: friend._id });

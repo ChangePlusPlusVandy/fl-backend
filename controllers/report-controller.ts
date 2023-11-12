@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import ReportModel from "../models/report.model";
 import { CommonErrors } from "../utils/common-errors";
-import reportModel from "../models/report.model";
 import { User } from "../models/user.model";
 
 export const findReports = async (request: Request, response: Response) => {
@@ -48,7 +47,7 @@ export const createReport = async (request: Request, response: Response) => {
 
     const validation = report.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response
         .status(400)
         .json({ error: validation.message });
@@ -71,8 +70,8 @@ export const updateReport = async (request: Request, response: Response) => {
 
   if (!reportId) {
     return response
-      .status(404)
-      .json({ error: 'Invalid User ID' });
+      .status(400)
+      .json({ error: CommonErrors.BadRequest });
   }
 
   try {
@@ -88,17 +87,17 @@ export const updateReport = async (request: Request, response: Response) => {
 
     const validation = replacement.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response
         .status(400)
         .json({ error: validation.message });
     }
 
-    const result = await ReportModel.replaceOne(
+    const result = await ReportModel.updateOne(
       {
         _id: reportId
       },
-      replacement,
+      request.body,
     );
 
     return response

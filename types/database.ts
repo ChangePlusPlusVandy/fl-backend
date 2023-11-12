@@ -26,6 +26,7 @@ export interface IMessage extends Document {
   timestamps: Date;
   sender: mongoose.Types.ObjectId;
   recipient: mongoose.Types.ObjectId;
+  chatId: mongoose.Types.ObjectId;
 }
 
 export interface IFriend extends Document {
