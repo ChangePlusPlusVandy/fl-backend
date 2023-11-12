@@ -17,6 +17,10 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI || "");
 
+mongoose.connection.on("connected", () => {
+  console.log("mongo connected");
+});
+
 const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
