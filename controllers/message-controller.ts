@@ -21,9 +21,9 @@ export const getMessage = async (request: Request, response: Response) => {
   }
 
   try {
-    const user = await Message.findById(messageId);
+    const message = await Message.findById(messageId);
 
-    return response.status(200).json(user);
+    return response.status(200).json(message);
   } catch (e) {
     return response.status(500).json({ error: e });
   }
@@ -53,13 +53,13 @@ export const updateMessage = async (request: Request, response: Response) => {
   const { messageId } = request.params;
 
   if (!messageId) {
-    return response.status(404).json({ error: "Invalid User ID" });
+    return response.status(404).json({ error: "Invalid Message ID" });
   }
 
   try {
-    const user = await Message.findById(messageId);
+    const message = await Message.findById(messageId);
 
-    if (!user) {
+    if (!message) {
       return response.status(404).json({ error: "Not found" });
     }
 

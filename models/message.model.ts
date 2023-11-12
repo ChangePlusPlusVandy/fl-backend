@@ -1,4 +1,4 @@
-import mongoose, {Document, Schema, Types} from "mongoose";
+import mongoose from "mongoose";
 import { IMessage } from "../types/database";
 
 const messageSchema = new mongoose.Schema<IMessage>({
@@ -11,17 +11,17 @@ const messageSchema = new mongoose.Schema<IMessage>({
     default: Date.now,
   },
   sender: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   recipient: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "User",
     required: true,
   },
   chatId: {
-    type: mongoose.Types.ObjectId,
+    type: mongoose.Schema.Types.ObjectId,
     ref: "Chat",
     required: true,
   },
