@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
+import { IPost } from "../types/database";
 
-const postSchema = new mongoose.Schema({
+const postSchema = new mongoose.Schema<IPost>({
     userId: {
         type: mongoose.Types.ObjectId
     },
@@ -30,4 +31,4 @@ const postSchema = new mongoose.Schema({
     timestamps: true,
 });
 
-export const Post = mongoose.model('Post', postSchema);
+export const Post = mongoose.model<IPost>('Post', postSchema);

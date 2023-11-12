@@ -1,7 +1,7 @@
 import mongoose, {Document, Schema, Types} from "mongoose";
-import { Message } from "../types/database";
+import { IMessage } from "../types/database";
 
-const messageSchema: Schema<Message> = new Schema({
+const messageSchema: Schema<IMessage> = new Schema<IMessage>({
     messageBody: {
         type: String,
         required: true
@@ -21,6 +21,6 @@ const messageSchema: Schema<Message> = new Schema({
         required: true
     }
 });
-const MessageModel = mongoose.model('Message', messageSchema);
+const MessageModel = mongoose.model<IMessage>('Message', messageSchema);
 
 module.exports = MessageModel;
