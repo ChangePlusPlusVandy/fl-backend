@@ -13,11 +13,11 @@ const friendSchema = new mongoose.Schema<IFriend>({
         trim: true
     },
     reports: [{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Report'
     }],
     attendance: [{
-        type: mongoose.Types.ObjectId,
+        type: mongoose.Schema.Types.ObjectId,
         ref: 'Attendance'
     }]
 }, {
@@ -25,5 +25,3 @@ const friendSchema = new mongoose.Schema<IFriend>({
 });
 
 export const Friend = mongoose.model<IFriend>('Friend', friendSchema);
-
-

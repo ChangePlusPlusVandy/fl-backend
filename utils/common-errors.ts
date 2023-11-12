@@ -1,4 +1,5 @@
 export const CommonErrors = {
   NotFound: 'Not Found',
-  BadRequest: 'Bad Request'
+  BadRequest: 'Bad Request',
+  InvalidID: 'Invalid ID'
 };

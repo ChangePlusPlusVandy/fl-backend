@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { Message } from "../models/message.model";
+import { CommonErrors } from "../utils/common-errors";
 
 // GET that returns all messages in the database
 export const getAllMessages = async (request: Request, response: Response) => {
@@ -17,7 +18,7 @@ export const getMessage = async (request: Request, response: Response) => {
   const { messageId } = request.params;
 
   if (!messageId) {
-    return response.status(404).json({ error: "Not found" });
+    return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
   try {
@@ -53,14 +54,14 @@ export const updateMessage = async (request: Request, response: Response) => {
   const { messageId } = request.params;
 
   if (!messageId) {
-    return response.status(404).json({ error: "Invalid Message ID" });
+    return response.status(404).json({ error: CommonErrors.InvalidID });
   }
 
   try {
     const message = await Message.findById(messageId);
 
     if (!message) {
-      return response.status(404).json({ error: "Not found" });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
     const replacement = new Message(request.body);
@@ -84,14 +85,14 @@ export const deleteMessage = async (request: Request, response: Response) => {
   const { messageId } = request.params;
 
   if (!messageId) {
-    return response.status(400).json({ error: "Invalid Message ID" });
+    return response.status(400).json({ error: CommonErrors.InvalidID });
   }
 
   try {
     const message = await Message.findById(messageId);
 
     if (!message) {
-      return response.status(400).json({ error: "Not found" });
+      return response.status(400).json({ error: CommonErrors.NotFound });
     }
 
     const result = await Message.deleteOne({ _id: message._id });

@@ -41,4 +41,4 @@ app.use("/friend", friendRouter);
 app.use("/message", messageRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);
-app.use("/user", verifyToken, userRouter);
+app.use("/user", userRouter);

@@ -1,5 +1,6 @@
 import express, { Request, Response } from "express";
 import { Chat } from "../models/chat.model";
+import { CommonErrors } from "../utils/common-errors";
 
 // GET that returns all chats in the database
 export const getAllChats = async (request: Request, response: Response) => {
@@ -17,7 +18,7 @@ export const getChat = async (request: Request, response: Response) => {
   const { chatId } = request.params;
 
   if (!chatId) {
-    return response.status(404).json({ error: "Not found" });
+    return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
   try {
@@ -53,14 +54,14 @@ export const updateChat = async (request: Request, response: Response) => {
   const { chatId } = request.params;
 
   if (!chatId) {
-    return response.status(404).json({ error: "Invalid Chat ID" });
+    return response.status(404).json({ error: CommonErrors.InvalidID });
   }
 
   try {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return response.status(404).json({ error: "Not found" });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
     const replacement = new Chat(request.body);
@@ -84,14 +85,14 @@ export const deleteChat = async (request: Request, response: Response) => {
   const { chatId } = request.params;
 
   if (!chatId) {
-    return response.status(400).json({ error: "Invalid Chat ID" });
+    return response.status(400).json({ error: CommonErrors.InvalidID });
   }
 
   try {
     const chat = await Chat.findById(chatId);
 
     if (!chat) {
-      return response.status(400).json({ error: "Not found" });
+      return response.status(400).json({ error: CommonErrors.NotFound });
     }
 
     const result = await Chat.deleteOne({ _id: chat._id });
