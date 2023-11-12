@@ -1,4 +1,3 @@
-<<<<<<< HEAD
 import mongoose, {Document, Schema, Types} from "mongoose";
 import { IMessage } from "../types/database";
 
