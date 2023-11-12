@@ -5,8 +5,10 @@ import { CommonErrors } from "../utils/common-errors";
 // GET /
 // @TODO: add filtering
 export const findFriends = async (request: Request, response: Response) => {
+  const { filter } = request.body;
+
   try {
-    const friends = await Friend.find({});
+    const friends = await Friend.find(filter ?? {});
 
     return response.status(200).json(friends);
   } catch (e) {
