@@ -1,4 +1,4 @@
-import { Router } from "express";
+import { Router } from 'express';
 import {
   findPosts,
   showPost,
@@ -7,10 +7,10 @@ import {
   deletePost,
 } from "../controllers/post-controller";
 
-export const postRouter = Router();
+export const userRouter = Router();
 
-postRouter.get("/", findPosts);
-postRouter.get("/:postId", showPost);
-postRouter.post("/", createPost);
-postRouter.put("/:postId", updatePost);
-postRouter.delete("/:postId", deletePost);
+userRouter.get('/', findPosts);
+userRouter.get('/:postId', showPost);
+userRouter.post('/', createPost);
+userRouter.put('/:postId', updatePost);
+userRouter.delete('/:postId', deletePost);
