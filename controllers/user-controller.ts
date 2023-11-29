@@ -10,38 +10,28 @@ export const findUsers = async (request: Request, response: Response) => {
 
     const users = await User.find(filters ?? {});
 
-    return response
-      .status(200)
-      .json(users);
+    return response.status(200).json(users);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // GET /{oid}
 export const showUser = async (request: Request, response: Response) => {
   const { userId } = request.params;
 
   if (!userId) {
-    return response
-      .status(404)
-      .json({ error: CommonErrors.NotFound });
+    return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
   try {
     const user = await User.findById(userId);
 
-    return response
-      .status(200)
-      .json(user);
+    return response.status(200).json(user);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // POST /
 export const createUser = async (request: Request, response: Response) => {
@@ -51,40 +41,30 @@ export const createUser = async (request: Request, response: Response) => {
     const validation = user.validateSync();
 
     if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation.message });
+      return response.status(400).json({ error: validation.message });
     }
 
     await user.save();
 
-    return response
-      .status(200)
-      .json(user);
+    return response.status(200).json(user);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // PUT /{oid}
 export const updateUser = async (request: Request, response: Response) => {
   const { userId } = request.params;
 
   if (!userId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const user = await User.findById(userId);
 
     if (!user) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
     const replacement = new User(request.body);
@@ -92,50 +72,36 @@ export const updateUser = async (request: Request, response: Response) => {
     const validation = replacement.validateSync();
 
     if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation.message });
+      return response.status(400).json({ error: validation.message });
     }
 
     const result = await User.updateOne({ _id: userId }, request.body);
 
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // DELETE /{oid}
 export const deleteUser = async (request: Request, response: Response) => {
   const { userId } = request.params;
 
   if (!userId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const user = await User.findById(userId);
 
     if (!user) {
-      return response
-        .status(400)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(400).json({ error: CommonErrors.NotFound });
     }
 
     const result = await User.deleteOne({ _id: user._id });
 
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
