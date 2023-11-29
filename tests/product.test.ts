@@ -9,7 +9,7 @@ beforeEach(async () => {
   await mongoose.connect(process.env.MONGO_URI || "");
 });
 
-/* Closing database connection after each test. */
+/* Closing database connection after each test. s*/
 afterEach(async () => {
   await mongoose.connection.close();
 });
