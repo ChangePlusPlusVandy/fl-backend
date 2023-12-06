@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IUser extends Document {
+  firebaseUserId: string
   name: string;
   emailAddress: string
   forgotPasswordCode: string

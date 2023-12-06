@@ -6,6 +6,10 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  firebaseUserId: {
+    type: String,
+    required: true,
+  },
   type: {
     type: String,
     required: true,
