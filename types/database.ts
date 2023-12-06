@@ -10,6 +10,7 @@ export interface IUser extends Document {
   timestamp: Date;
   friends: mongoose.Types.ObjectId[];
   chats: mongoose.Types.ObjectId[];
+  schedule: string[]
 }
 
 export interface IPost extends Document {

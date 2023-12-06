@@ -2,11 +2,11 @@ import mongoose from "mongoose";
 import { IUser } from "../types/database";
 
 const userSchema = new mongoose.Schema<IUser>({
-  name: {
+  firebaseUserId: {
     type: String,
     required: true,
   },
-  firebaseUserId: {
+  name: {
     type: String,
     required: true,
   },
@@ -36,6 +36,11 @@ const userSchema = new mongoose.Schema<IUser>({
       ref: "Chat",
     },
   ],
+  schedule: [
+    {
+      type: String,
+    },
+  ]
 });
 
 export const User = mongoose.model<IUser>('User', userSchema);
