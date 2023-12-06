@@ -37,8 +37,8 @@ export const createChat = async (request: Request, response: Response) => {
 
     const validation = chat.validateSync();
 
-    if (validation !== null) {
-      return response.status(400).json({ error: validation.message});
+    if (validation) {
+      return response.status(400).json({ error: validation.message });
     }
 
     await chat.save();
@@ -102,4 +102,3 @@ export const deleteChat = async (request: Request, response: Response) => {
     return response.status(500).json({ error: e });
   }
 };
-
