@@ -1,9 +1,7 @@
-import mongoose, { Mongoose } from "mongoose";
-import { describe, expect, test } from "@jest/globals";
+import mongoose from "mongoose";
+import { describe, expect } from "@jest/globals";
 import { app } from "..";
-import dotenv from "dotenv";
 import request from "supertest";
-
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -22,7 +20,7 @@ describe("INSERT /report/", () => {
     const reportBody = {
       friendId: "65713d71d097d31b78bbed53",
       reportBody: "great work!",
-      date: "2023-12-06T06:00:00.000Z"
+      date: "2023-12-06T06:00:00.000Z",
     };
 
     const res = await request(app).post("/report").send(reportBody);
@@ -41,7 +39,7 @@ describe("GET /report/", () => {
     expect(res.body.length).toBeGreaterThan(0);
 
     // Check if every ID in reportIds is present in the response body
-    const allIdsPresent = reportIds.every(id => 
+    const allIdsPresent = reportIds.every((id) =>
       res.body.some((report: { _id: string }) => report._id === id)
     );
 
@@ -50,43 +48,44 @@ describe("GET /report/", () => {
 });
 
 const newReportBody = {
-    friendId: "65713d71d097d31b78bbed53",
-    reportBody: "great updated work!",
-    date: "2023-12-07T06:00:00.000Z"
-  };
+  friendId: "65713d71d097d31b78bbed53",
+  reportBody: "great updated work!",
+  date: "2023-12-07T06:00:00.000Z",
+};
 
-  describe("PUT /report/", () => {
-    it("should update a report", async () => {
-      const res = (await request(app).put(`/report/${reportIds[0]}`).send(newReportBody));
-      expect(res.statusCode).toBe(204);
-    });
+describe("PUT /report/", () => {
+  it("should update a report", async () => {
+    const res = await request(app)
+      .put(`/report/${reportIds[0]}`)
+      .send(newReportBody);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /report/", () => {
-    it("should show updated report", async () => {
-        const res = await request(app).get(`/report/${reportIds[0]}`);
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject(newReportBody);
-    });
+describe("GET /report/", () => {
+  it("should show updated report", async () => {
+    const res = await request(app).get(`/report/${reportIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(newReportBody);
   });
+});
 
-  describe("DELETE /report/", () => {
-    it("should delete report", async () => {
-        const res = await request(app).delete(`/report/${reportIds[0]}`);
-        expect(res.statusCode).toBe(204);
-    });
+describe("DELETE /report/", () => {
+  it("should delete report", async () => {
+    const res = await request(app).delete(`/report/${reportIds[0]}`);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /report/", () => {
-    it("deleted report should not exist anymore", async () => {
-      const res = await request(app).get("/report");
-      expect(res.statusCode).toBe(200);
-    
-      const allIdsPresent = reportIds.every(id => 
-        res.body.some((report: { _id: string }) => report._id === id)
-      );
-  
-      expect(allIdsPresent).toBe(false);
-    });
+describe("GET /report/", () => {
+  it("deleted report should not exist anymore", async () => {
+    const res = await request(app).get("/report");
+    expect(res.statusCode).toBe(200);
+
+    const allIdsPresent = reportIds.every((id) =>
+      res.body.some((report: { _id: string }) => report._id === id)
+    );
+
+    expect(allIdsPresent).toBe(false);
   });
-  
+});

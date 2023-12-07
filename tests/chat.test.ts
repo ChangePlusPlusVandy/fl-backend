@@ -1,9 +1,7 @@
-import mongoose, { Mongoose } from "mongoose";
-import { describe, expect, test } from "@jest/globals";
+import mongoose from "mongoose";
+import { describe, expect } from "@jest/globals";
 import { app } from "..";
-import dotenv from "dotenv";
 import request from "supertest";
-
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -40,7 +38,7 @@ describe("GET /chat/", () => {
     expect(res.body.length).toBeGreaterThan(0);
 
     // Check if every ID in chatIds is present in the response body
-    const allIdsPresent = chatIds.every(id => 
+    const allIdsPresent = chatIds.every((id) =>
       res.body.some((chat: { _id: string }) => chat._id === id)
     );
 
@@ -53,38 +51,37 @@ const newChatBody = {
   messages: ["65715f56955a8e773cca2cb7"],
 };
 
-  describe("PUT /chat/", () => {
-    it("should update a chat", async () => {
-      const res = (await request(app).put(`/chat/${chatIds[0]}`).send(newChatBody));
-      expect(res.statusCode).toBe(204);
-    });
+describe("PUT /chat/", () => {
+  it("should update a chat", async () => {
+    const res = await request(app).put(`/chat/${chatIds[0]}`).send(newChatBody);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /chat/", () => {
-    it("should show updated chat", async () => {
-        const res = await request(app).get(`/chat/${chatIds[0]}`);
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject(newChatBody);
-    });
+describe("GET /chat/", () => {
+  it("should show updated chat", async () => {
+    const res = await request(app).get(`/chat/${chatIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(newChatBody);
   });
+});
 
-  describe("DELETE /chat/", () => {
-    it("should delete chat", async () => {
-        const res = await request(app).delete(`/chat/${chatIds[0]}`);
-        expect(res.statusCode).toBe(204);
-    });
+describe("DELETE /chat/", () => {
+  it("should delete chat", async () => {
+    const res = await request(app).delete(`/chat/${chatIds[0]}`);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /chat/", () => {
-    it("deleted chat should not exist anymore", async () => {
-      const res = await request(app).get("/chat");
-      expect(res.statusCode).toBe(200);
-    
-      const allIdsPresent = chatIds.every(id => 
-        res.body.some((chat: { _id: string }) => chat._id === id)
-      );
-  
-      expect(allIdsPresent).toBe(false);
-    });
+describe("GET /chat/", () => {
+  it("deleted chat should not exist anymore", async () => {
+    const res = await request(app).get("/chat");
+    expect(res.statusCode).toBe(200);
+
+    const allIdsPresent = chatIds.every((id) =>
+      res.body.some((chat: { _id: string }) => chat._id === id)
+    );
+
+    expect(allIdsPresent).toBe(false);
   });
-  
+});

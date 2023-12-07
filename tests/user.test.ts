@@ -1,9 +1,7 @@
-import mongoose, { Mongoose } from "mongoose";
-import { describe, expect, test } from "@jest/globals";
+import mongoose from "mongoose";
+import { describe, expect } from "@jest/globals";
 import { app } from "..";
-import dotenv from "dotenv";
 import request from "supertest";
-
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -27,7 +25,7 @@ describe("INSERT /user/", () => {
       timestamp: "2023-12-06T06:00:00.000Z",
       friends: ["65713e67d097d31b78bbed56"],
       chats: ["657142aad097d31b78bbed63"],
-      schedule: ["1", "2", "3", "4", "5"]
+      schedule: ["1", "2", "3", "4", "5"],
     };
 
     const res = await request(app).post("/user").send(userBody);
@@ -46,7 +44,7 @@ describe("GET /user/", () => {
     expect(res.body.length).toBeGreaterThan(0);
 
     // Check if every ID in userIds is present in the response body
-    const allIdsPresent = userIds.every(id => 
+    const allIdsPresent = userIds.every((id) =>
       res.body.some((user: { _id: string }) => user._id === id)
     );
 
@@ -62,41 +60,40 @@ const newUserBody = {
   timestamp: "2023-12-06T06:00:00.000Z",
   friends: ["65713e67d097d31b78bbed56"],
   chats: ["657142aad097d31b78bbed63"],
-  schedule: ["1", "2", "3", "4", "5"]
+  schedule: ["1", "2", "3", "4", "5"],
 };
 
-  describe("PUT /user/", () => {
-    it("should update a user", async () => {
-      const res = (await request(app).put(`/user/${userIds[0]}`).send(newUserBody));
-      expect(res.statusCode).toBe(204);
-    });
+describe("PUT /user/", () => {
+  it("should update a user", async () => {
+    const res = await request(app).put(`/user/${userIds[0]}`).send(newUserBody);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /user/", () => {
-    it("should show updated user", async () => {
-        const res = await request(app).get(`/user/${userIds[0]}`);
-        expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject(newUserBody);
-    });
+describe("GET /user/", () => {
+  it("should show updated user", async () => {
+    const res = await request(app).get(`/user/${userIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(newUserBody);
   });
+});
 
-  describe("DELETE /user/", () => {
-    it("should delete user", async () => {
-        const res = await request(app).delete(`/user/${userIds[0]}`);
-        expect(res.statusCode).toBe(204);
-    });
+describe("DELETE /user/", () => {
+  it("should delete user", async () => {
+    const res = await request(app).delete(`/user/${userIds[0]}`);
+    expect(res.statusCode).toBe(204);
   });
+});
 
-  describe("GET /user/", () => {
-    it("deleted user should not exist anymore", async () => {
-      const res = await request(app).get("/user");
-      expect(res.statusCode).toBe(200);
+describe("GET /user/", () => {
+  it("deleted user should not exist anymore", async () => {
+    const res = await request(app).get("/user");
+    expect(res.statusCode).toBe(200);
 
-      const allIdsPresent = userIds.every(id => 
-        res.body.some((report: { _id: string }) => report._id === id)
-      );
-  
-      expect(allIdsPresent).toBe(false);
-    });
+    const allIdsPresent = userIds.every((id) =>
+      res.body.some((report: { _id: string }) => report._id === id)
+    );
+
+    expect(allIdsPresent).toBe(false);
   });
-  
+});
