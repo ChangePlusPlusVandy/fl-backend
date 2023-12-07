@@ -17,9 +17,11 @@ dotenv.config();
 
 mongoose.connect(process.env.MONGO_URI || "");
 
-mongoose.connection.on("connected", () => {
-  console.log("mongo connected");
-});
+if (process.env.NODE_ENV !== "test") {
+  mongoose.connection.on("connected", () => {
+    console.log("mongo connected");
+  });
+}
 
 export const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
@@ -31,9 +33,11 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).json({ status: "healthy" });
 });
 
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+if (process.env.NODE_ENV !== "test") {
+  app.listen(PORT, () => {
+    console.log(`Server is running on port ${PORT}`);
+  });
+}
 
 app.use("/attendance", attendanceRouter);
 app.use("/chat", chatRouter);
