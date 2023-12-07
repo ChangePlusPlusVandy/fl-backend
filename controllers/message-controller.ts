@@ -37,7 +37,7 @@ export const createMessage = async (request: Request, response: Response) => {
 
     const validation = message.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response.status(400).json({ error: validation.message });
     }
 
@@ -68,7 +68,7 @@ export const updateMessage = async (request: Request, response: Response) => {
 
     const validation = replacement.validateSync();
 
-    if (validation !== null) {
+    if (validation) {
       return response.status(400).json({ error: validation.message });
     }
 

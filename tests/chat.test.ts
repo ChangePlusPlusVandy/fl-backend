@@ -20,9 +20,8 @@ let chatIds: string[] = [];
 describe("INSERT /chat/", () => {
   it("should insert a chat", async () => {
     const chatBody = {
-      friendId: "65713d71d097d31b78bbed53",
-      chatBody: "great work!",
-      date: "2023-12-06T06:00:00.000Z"
+      users: ["65713d71d097d31b78bbed53"],
+      messages: ["65715f56955a8e773cca2cb7"],
     };
 
     const res = await request(app).post("/chat").send(chatBody);
@@ -49,15 +48,14 @@ describe("GET /chat/", () => {
   });
 });
 
-const newchatBody = {
-    friendId: "65713d71d097d31b78bbed53",
-    chatBody: "great updated work!",
-    date: "2023-12-07T06:00:00.000Z"
-  };
+const newChatBody = {
+  users: [],
+  messages: ["65715f56955a8e773cca2cb7"],
+};
 
   describe("PUT /chat/", () => {
     it("should update a chat", async () => {
-      const res = (await request(app).put(`/chat/${chatIds[0]}`).send(newchatBody));
+      const res = (await request(app).put(`/chat/${chatIds[0]}`).send(newChatBody));
       expect(res.statusCode).toBe(204);
     });
   });
@@ -66,7 +64,7 @@ const newchatBody = {
     it("should show updated chat", async () => {
         const res = await request(app).get(`/chat/${chatIds[0]}`);
         expect(res.statusCode).toBe(200);
-        expect(res.body).toMatchObject(newchatBody);
+        expect(res.body).toMatchObject(newChatBody);
     });
   });
 

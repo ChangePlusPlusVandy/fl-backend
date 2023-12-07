@@ -32,9 +32,9 @@ app.get("/", (req: Request, res: Response) => {
 });
 
 // uncommenting these lines will mess up testing
-app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT}`);
-});
+// app.listen(PORT, () => {
+//   console.log(`Server is running on port ${PORT}`);
+// });
 
 app.use("/attendance", attendanceRouter);
 app.use("/chat", chatRouter);
