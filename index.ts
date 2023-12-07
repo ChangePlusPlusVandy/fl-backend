@@ -31,6 +31,7 @@ app.get("/", (req: Request, res: Response) => {
   res.status(200).json({ status: "healthy" });
 });
 
+// uncommenting these lines will mess up testing
 app.listen(PORT, () => {
   console.log(`Server is running on port ${PORT}`);
 });
