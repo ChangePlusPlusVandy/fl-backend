@@ -10,6 +10,6 @@ import {
 
 chatRouter.get("/", getAllChats);
 chatRouter.get("/:chatId", getChat);
-chatRouter.post("/:chatId", createChat);
+chatRouter.post("/", createChat);
 chatRouter.put("/:chatId", updateChat);
 chatRouter.delete("/:chatId", deleteChat);

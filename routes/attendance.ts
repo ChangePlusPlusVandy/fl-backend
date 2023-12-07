@@ -11,6 +11,6 @@ export const attendanceRouter = express.Router();
 
 attendanceRouter.get("/", findAttendance);
 attendanceRouter.get("/:attendanceId", showAttendance);
-attendanceRouter.post("/:attendanceId", createAttendance);
+attendanceRouter.post("/", createAttendance);
 attendanceRouter.put("/:attendanceId", updateAttendance);
 attendanceRouter.delete("/:attendanceId", deleteAttendance);
