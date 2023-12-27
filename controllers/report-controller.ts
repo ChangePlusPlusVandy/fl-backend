@@ -1,7 +1,6 @@
 import { Request, Response } from "express";
 import { Report } from "../models/report.model";
 import { CommonErrors } from "../utils/common-errors";
-import { User } from "../models/user.model";
 
 export const findReports = async (request: Request, response: Response) => {
   try {
@@ -88,7 +87,7 @@ export const deleteReport = async (request: Request, response: Response) => {
   const { reportId } = request.params;
 
   if (!reportId) {
-    return response.status(400).json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.InvalidID });
   }
 
   try {
@@ -98,7 +97,7 @@ export const deleteReport = async (request: Request, response: Response) => {
       return response.status(400).json({ error: CommonErrors.NotFound });
     }
 
-    const result = await User.deleteOne({
+    const result = await Report.deleteOne({
       _id: report._id,
     });
 

@@ -1,6 +1,7 @@
 import mongoose from "mongoose";
 
 export interface IUser extends Document {
+  firebaseUserId: string
   name: string;
   emailAddress: string
   forgotPasswordCode: string
@@ -9,6 +10,7 @@ export interface IUser extends Document {
   timestamp: Date;
   friends: mongoose.Types.ObjectId[];
   chats: mongoose.Types.ObjectId[];
+  schedule: string[]
 }
 
 export interface IPost extends Document {
