@@ -10,38 +10,28 @@ export const findPosts = async (request: Request, response: Response) => {
 
     const posts = await Post.find(filters ?? {});
 
-    return response
-      .status(200)
-      .json(posts);
+    return response.status(200).json(posts);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // GET /{oid}
 export const showPost = async (request: Request, response: Response) => {
   const { postId } = request.params;
 
   if (!postId) {
-    return response
-      .status(404)
-      .json({ error: CommonErrors.NotFound });
+    return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
   try {
     const post = await Post.findById(postId);
 
-    return response
-      .status(200)
-      .json(post);
+    return response.status(200).json(post);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // POST /
 export const createPost = async (request: Request, response: Response) => {
@@ -51,91 +41,61 @@ export const createPost = async (request: Request, response: Response) => {
     const validation = post.validateSync();
 
     if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation.message });
+      return response.status(400).json({ error: validation.message });
     }
 
     await post.save();
 
-    return response
-      .status(200)
-      .json(post);
+    return response.status(200).json(post);
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
-// PUT /{oid}
+// PATCH /{oid}
 export const updatePost = async (request: Request, response: Response) => {
   const { postId } = request.params;
 
   if (!postId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const post = await Post.findById(postId);
 
     if (!post) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Post(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
+    const result = await Post.findByIdAndUpdate(postId, request.body);
 
-    if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation.message });
-    }
-
-    const result = await Post.updateOne({ _id: postId }, request.body);
-
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // DELETE /{oid}
 export const deletePost = async (request: Request, response: Response) => {
   const { postId } = request.params;
 
   if (!postId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const post = await Post.findById(postId);
 
     if (!post) {
-      return response
-        .status(400)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(400).json({ error: CommonErrors.NotFound });
     }
 
     const result = await Post.deleteOne({ _id: post._id });
 
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};

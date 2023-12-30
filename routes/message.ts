@@ -12,5 +12,5 @@ export const messageRouter = express.Router();
 messageRouter.get("/", getAllMessages);
 messageRouter.get("/:messageId", getMessage);
 messageRouter.post("/", createMessage);
-messageRouter.put("/:messageId", updateMessage);
+messageRouter.patch("/:messageId", updateMessage);
 messageRouter.delete("/:messageId", deleteMessage);

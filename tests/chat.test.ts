@@ -46,14 +46,20 @@ describe("GET /chat/", () => {
   });
 });
 
-const newChatBody = {
-  users: [],
-  messages: ["65715f56955a8e773cca2cb7"],
+const updatedFields = {
+  messages: ["6590701e493a636b9b9d84aa"],
 };
 
-describe("PUT /chat/", () => {
+const updatedChat = {
+  users: ["65713d71d097d31b78bbed53"],
+  messages: ["6590701e493a636b9b9d84aa"],
+};
+
+describe("PATCH /chat/", () => {
   it("should update a chat", async () => {
-    const res = await request(app).put(`/chat/${chatIds[0]}`).send(newChatBody);
+    const res = await request(app)
+      .patch(`/chat/${chatIds[0]}`)
+      .send(updatedFields);
     expect(res.statusCode).toBe(204);
   });
 });
@@ -62,7 +68,7 @@ describe("GET /chat/", () => {
   it("should show updated chat", async () => {
     const res = await request(app).get(`/chat/${chatIds[0]}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toMatchObject(newChatBody);
+    expect(res.body).toMatchObject(updatedChat);
   });
 });
 

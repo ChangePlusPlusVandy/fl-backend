@@ -34,100 +34,82 @@ export const showAttendance = async (request: Request, response: Response) => {
 };
 
 // POST /
-export const createAttendance = async (request: Request, response: Response) => {
+export const createAttendance = async (
+  request: Request,
+  response: Response
+) => {
   try {
     const attendance = new Attendance(request.body);
 
     const validation = attendance.validateSync();
 
     if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation?.message });
+      return response.status(400).json({ error: validation?.message });
     }
 
     await attendance.save();
 
-    return response
-      .status(200)
-      .json(attendance);
+    return response.status(200).json(attendance);
   } catch (e) {
     console.log(e);
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
-// PUT /{oid}
-export const updateAttendance = async (request: Request, response: Response) => {
+// PATCH /{oid}
+export const updateAttendance = async (
+  request: Request,
+  response: Response
+) => {
   const { attendanceId } = request.params;
 
   if (!attendanceId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const attendance = await Attendance.findById(attendanceId);
 
     if (!attendance) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Attendance(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
+    const result = await Attendance.findByIdAndUpdate(
+      attendanceId,
+      updatedFields
+    );
 
-    if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation?.message });
-    }
-
-    const result = await Attendance.updateOne({ _id: attendanceId }, request.body);
-
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    console.log(e)
-    return response
-      .status(500)
-      .json({ error: e });
+    console.log(e);
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // DELETE /{oid}
-export const deleteAttendance = async (request: Request, response: Response) => {
+export const deleteAttendance = async (
+  request: Request,
+  response: Response
+) => {
   const { attendanceId } = request.params;
 
   if (!attendanceId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const attendance = await Attendance.findById(attendanceId);
 
     if (!attendance) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.BadRequest });
+      return response.status(404).json({ error: CommonErrors.BadRequest });
     }
 
     const result = await Attendance.deleteOne({ _id: attendance._id });
 
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};

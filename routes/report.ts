@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   findReports,
   showReport,
@@ -9,9 +9,8 @@ import {
 
 export const reportRouter = Router();
 
-
-reportRouter.get('/', findReports);
-reportRouter.get('/:reportId', showReport);
-reportRouter.post('/', createReport);
-reportRouter.put('/:reportId', updateReport);
-reportRouter.delete('/:reportId', deleteReport);
+reportRouter.get("/", findReports);
+reportRouter.get("/:reportId", showReport);
+reportRouter.post("/", createReport);
+reportRouter.patch("/:reportId", updateReport);
+reportRouter.delete("/:reportId", deleteReport);

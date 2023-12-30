@@ -49,7 +49,7 @@ export const createChat = async (request: Request, response: Response) => {
   }
 };
 
-// PUT /{oid}
+// PATCH /{oid}
 export const updateChat = async (request: Request, response: Response) => {
   const { chatId } = request.params;
 
@@ -64,15 +64,9 @@ export const updateChat = async (request: Request, response: Response) => {
       return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Chat(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
-
-    if (validation) {
-      return response.status(400).json({ error: validation.message });
-    }
-
-    const result = await Chat.replaceOne({ _id: chatId }, request.body);
+    const result = await Chat.findByIdAndUpdate(chatId, request.body);
 
     return response.status(204).send();
   } catch (e) {

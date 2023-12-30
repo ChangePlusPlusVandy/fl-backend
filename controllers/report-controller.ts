@@ -48,6 +48,7 @@ export const createReport = async (request: Request, response: Response) => {
   }
 };
 
+//PATCH
 export const updateReport = async (request: Request, response: Response) => {
   const { reportId } = request.params;
 
@@ -62,20 +63,9 @@ export const updateReport = async (request: Request, response: Response) => {
       return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Report(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
-
-    if (validation) {
-      return response.status(400).json({ error: validation.message });
-    }
-
-    const result = await Report.updateOne(
-      {
-        _id: reportId,
-      },
-      request.body
-    );
+    const result = await Report.findByIdAndUpdate(reportId, request.body);
 
     return response.status(204).send();
   } catch (e) {

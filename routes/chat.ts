@@ -11,5 +11,5 @@ import {
 chatRouter.get("/", getAllChats);
 chatRouter.get("/:chatId", getChat);
 chatRouter.post("/", createChat);
-chatRouter.put("/:chatId", updateChat);
+chatRouter.patch("/:chatId", updateChat);
 chatRouter.delete("/:chatId", deleteChat);

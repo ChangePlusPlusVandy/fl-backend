@@ -49,7 +49,7 @@ export const createMessage = async (request: Request, response: Response) => {
   }
 };
 
-// PUT /{oid}
+// PATCH /{oid}
 export const updateMessage = async (request: Request, response: Response) => {
   const { messageId } = request.params;
 
@@ -64,15 +64,9 @@ export const updateMessage = async (request: Request, response: Response) => {
       return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Message(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
-
-    if (validation) {
-      return response.status(400).json({ error: validation.message });
-    }
-
-    const result = await Message.replaceOne({ _id: messageId }, replacement);
+    const result = await Message.findByIdAndUpdate(messageId, updatedFields);
 
     return response.status(204).send();
   } catch (e) {
