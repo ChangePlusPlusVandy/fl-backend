@@ -69,7 +69,7 @@ export const updateUser = async (request: Request, response: Response) => {
 
     const updatedFields = request.body;
 
-    const result = await User.findByIdAndUpdate(userId, request.body);
+    const result = await User.findByIdAndUpdate(userId, updatedFields);
 
     return response.status(204).send();
   } catch (e) {

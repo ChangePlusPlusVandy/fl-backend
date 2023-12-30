@@ -70,7 +70,7 @@ export const updateFriend = async (request: Request, response: Response) => {
 
     const updatedFields = request.body;
 
-    const result = await Friend.findByIdAndUpdate(friendId, request.body);
+    const result = await Friend.findByIdAndUpdate(friendId, updatedFields);
 
     return response.status(204).send();
   } catch (e) {

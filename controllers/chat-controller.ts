@@ -66,7 +66,7 @@ export const updateChat = async (request: Request, response: Response) => {
 
     const updatedFields = request.body;
 
-    const result = await Chat.findByIdAndUpdate(chatId, request.body);
+    const result = await Chat.findByIdAndUpdate(chatId, updatedFields);
 
     return response.status(204).send();
   } catch (e) {

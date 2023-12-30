@@ -65,7 +65,7 @@ export const updateReport = async (request: Request, response: Response) => {
 
     const updatedFields = request.body;
 
-    const result = await Report.findByIdAndUpdate(reportId, request.body);
+    const result = await Report.findByIdAndUpdate(reportId, updatedFields);
 
     return response.status(204).send();
   } catch (e) {
