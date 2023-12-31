@@ -52,7 +52,11 @@ describe("GET /user/", () => {
   });
 });
 
-const newUserBody = {
+const updatedFields = {
+  name: "updated jest",
+};
+
+const updatedUser = {
   firebaseUserId: "jesttestjest",
   name: "updated jest",
   type: "friend",
@@ -63,9 +67,11 @@ const newUserBody = {
   schedule: ["1", "2", "3", "4", "5"],
 };
 
-describe("PUT /user/", () => {
+describe("PATCH /user/", () => {
   it("should update a user", async () => {
-    const res = await request(app).put(`/user/${userIds[0]}`).send(newUserBody);
+    const res = await request(app)
+      .patch(`/user/${userIds[0]}`)
+      .send(updatedFields);
     expect(res.statusCode).toBe(204);
   });
 });
@@ -74,7 +80,7 @@ describe("GET /user/", () => {
   it("should show updated user", async () => {
     const res = await request(app).get(`/user/${userIds[0]}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toMatchObject(newUserBody);
+    expect(res.body).toMatchObject(updatedUser);
   });
 });
 

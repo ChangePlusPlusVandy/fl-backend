@@ -41,93 +41,63 @@ export const createFriend = async (request: Request, response: Response) => {
     const validation = friend.validateSync();
 
     if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation?.message });
+      return response.status(400).json({ error: validation?.message });
     }
 
     await friend.save();
 
-    return response
-      .status(200)
-      .json(friend);
+    return response.status(200).json(friend);
   } catch (e) {
     console.log(e);
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};
 
-// PUT /{oid}
+// PATCH /{oid}
 export const updateFriend = async (request: Request, response: Response) => {
   const { friendId } = request.params;
 
   if (!friendId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const friend = await Friend.findById(friendId);
 
     if (!friend) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.NotFound });
+      return response.status(404).json({ error: CommonErrors.NotFound });
     }
 
-    const replacement = new Friend(request.body);
+    const updatedFields = request.body;
 
-    const validation = replacement.validateSync();
+    const result = await Friend.findByIdAndUpdate(friendId, updatedFields);
 
-    if (validation) {
-      return response
-        .status(400)
-        .json({ error: validation?.message });
-    }
-
-    const result = await Friend.updateOne({ _id: friendId }, request.body);
-
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    console.log(e)
-    return response
-      .status(500)
-      .json({ error: e });
+    console.log(e);
+    return response.status(500).json({ error: e });
   }
-}
+};
 
 // DELETE /{oid}
 export const deleteFriend = async (request: Request, response: Response) => {
   const { friendId } = request.params;
 
   if (!friendId) {
-    return response
-      .status(400)
-      .json({ error: CommonErrors.BadRequest });
+    return response.status(400).json({ error: CommonErrors.BadRequest });
   }
 
   try {
     const friend = await Friend.findById(friendId);
 
     if (!friend) {
-      return response
-        .status(404)
-        .json({ error: CommonErrors.BadRequest });
+      return response.status(404).json({ error: CommonErrors.BadRequest });
     }
 
     const result = await Friend.deleteOne({ _id: friend._id });
 
-    return response
-      .status(204)
-      .send();
+    return response.status(204).send();
   } catch (e) {
-    return response
-      .status(500)
-      .json({ error: e });
+    return response.status(500).json({ error: e });
   }
-}
+};

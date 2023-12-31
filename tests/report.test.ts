@@ -20,7 +20,7 @@ describe("INSERT /report/", () => {
     const reportBody = {
       friendId: "65713d71d097d31b78bbed53",
       reportBody: "great work!",
-      date: "2023-12-06T06:00:00.000Z",
+      date: "2023-12-07T06:00:00.000Z",
     };
 
     const res = await request(app).post("/report").send(reportBody);
@@ -47,17 +47,21 @@ describe("GET /report/", () => {
   });
 });
 
-const newReportBody = {
+const updatedFields = {
+  reportBody: "great updated work!",
+};
+
+const updatedReport = {
   friendId: "65713d71d097d31b78bbed53",
   reportBody: "great updated work!",
   date: "2023-12-07T06:00:00.000Z",
 };
 
-describe("PUT /report/", () => {
+describe("PATCH /report/", () => {
   it("should update a report", async () => {
     const res = await request(app)
-      .put(`/report/${reportIds[0]}`)
-      .send(newReportBody);
+      .patch(`/report/${reportIds[0]}`)
+      .send(updatedFields);
     expect(res.statusCode).toBe(204);
   });
 });
@@ -66,7 +70,7 @@ describe("GET /report/", () => {
   it("should show updated report", async () => {
     const res = await request(app).get(`/report/${reportIds[0]}`);
     expect(res.statusCode).toBe(200);
-    expect(res.body).toMatchObject(newReportBody);
+    expect(res.body).toMatchObject(updatedReport);
   });
 });
 

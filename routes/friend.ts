@@ -12,5 +12,5 @@ export const friendRouter = Router();
 friendRouter.get("/", findFriends);
 friendRouter.get("/:friendId", showFriend);
 friendRouter.post("/", createFriend);
-friendRouter.put("/:friendId", updateFriend);
+friendRouter.patch("/:friendId", updateFriend);
 friendRouter.delete("/:friendId", deleteFriend);

@@ -1,4 +1,4 @@
-import { Router } from 'express';
+import { Router } from "express";
 import {
   findUsers,
   showUser,
@@ -9,8 +9,8 @@ import {
 
 export const userRouter = Router();
 
-userRouter.get('/', findUsers);
-userRouter.get('/:userId', showUser);
-userRouter.post('/', createUser);
-userRouter.put('/:userId', updateUser);
-userRouter.delete('/:userId', deleteUser);
+userRouter.get("/", findUsers);
+userRouter.get("/:userId", showUser);
+userRouter.post("/", createUser);
+userRouter.patch("/:userId", updateUser);
+userRouter.delete("/:userId", deleteUser);

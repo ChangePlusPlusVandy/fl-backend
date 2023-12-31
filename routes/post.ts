@@ -9,8 +9,8 @@ import {
 
 export const postRouter = Router();
 
-postRouter.get('/', findPosts);
-postRouter.get('/:postId', showPost);
-postRouter.post('/', createPost);
-postRouter.put('/:postId', updatePost);
-postRouter.delete('/:postId', deletePost);
+postRouter.get("/", findPosts);
+postRouter.get("/:postId", showPost);
+postRouter.post("/", createPost);
+postRouter.patch("/:postId", updatePost);
+postRouter.delete("/:postId", deletePost);
