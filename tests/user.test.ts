@@ -14,24 +14,25 @@ afterEach(async () => {
 });
 
 let userIds: string[] = [];
+let firebaseIds: string[] = [];
+const userBody = {
+  firebaseUserId: "jesttestjest",
+  name: "jest",
+  type: "friend",
+  posts: ["6571401cd097d31b78bbed5e"],
+  timestamp: "2023-12-06T06:00:00.000Z",
+  friends: ["65713e67d097d31b78bbed56"],
+  chats: ["657142aad097d31b78bbed63"],
+  schedule: ["1", "2", "3", "4", "5"],
+};
 
 describe("INSERT /user/", () => {
   it("should insert a user", async () => {
-    const userBody = {
-      firebaseUserId: "jesttestjest",
-      name: "jest",
-      type: "friend",
-      posts: ["6571401cd097d31b78bbed5e"],
-      timestamp: "2023-12-06T06:00:00.000Z",
-      friends: ["65713e67d097d31b78bbed56"],
-      chats: ["657142aad097d31b78bbed63"],
-      schedule: ["1", "2", "3", "4", "5"],
-    };
-
     const res = await request(app).post("/user").send(userBody);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(userBody);
     userIds.push(res.body._id);
+    firebaseIds.push(res.body.firebaseUserId);
   });
 });
 
@@ -49,6 +50,23 @@ describe("GET /user/", () => {
     );
 
     expect(allIdsPresent).toBe(true);
+  });
+});
+
+describe("GET /user/:userId", () => {
+  it("should show updated user", async () => {
+    const res = await request(app).get(`/user/${userIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(userBody);
+  });
+});
+
+describe("GET /user/firebase", () => {
+  it("should show user with the given firebase id", async () => {
+    console.log(firebaseIds[0])
+    const res = await request(app).get(`/user/firebase/${firebaseIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(userBody);
   });
 });
 
@@ -76,9 +94,17 @@ describe("PATCH /user/", () => {
   });
 });
 
-describe("GET /user/", () => {
+describe("GET /user/:userId", () => {
   it("should show updated user", async () => {
     const res = await request(app).get(`/user/${userIds[0]}`);
+    expect(res.statusCode).toBe(200);
+    expect(res.body).toMatchObject(updatedUser);
+  });
+});
+
+describe("GET /user/firebase/", () => {
+  it("should show updated user with the given firebase id", async () => {
+    const res = await request(app).get(`/user/firebase/${firebaseIds[0]}`);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedUser);
   });
