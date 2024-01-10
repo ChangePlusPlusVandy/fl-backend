@@ -2,6 +2,8 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { createHmac } from "crypto";
+import { generateHmacSignature, verifyHmacSignature } from "../middleware/verifySignature";
 
 // Connecting to the database before each test
 beforeEach(async () => {
@@ -46,7 +48,9 @@ describe("GET /friend/", () => {
 
 describe("GET /friend/:friendId", () => {
   it("should return a specific friend", async () => {
-    const res = await request(app).get(`/friend/${friendIds[0]}`);
+    if(process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(JSON.stringify({ friendId: friendIds[0] }), process.env.SECRET_KEY);
+    const res = await request(app).get(`/friend/${friendIds[0]}`).set('Friends-Life-Signature', hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body._id).toBe(friendIds[0]);
   });
@@ -75,7 +79,9 @@ describe("PATCH /friend/:friendId", () => {
 
 describe("GET /friend/:friendId", () => {
   it("should show updated friend", async () => {
-    const res = await request(app).get(`/friend/${friendIds[0]}`);
+    if(process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(JSON.stringify({ friendId: friendIds[0] }), process.env.SECRET_KEY);
+    const res = await request(app).get(`/friend/${friendIds[0]}`).set('Friends-Life-Signature', hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedFriend);
   });
