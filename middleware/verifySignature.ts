@@ -8,12 +8,12 @@ export const verifyHmacSignature = async (
 ) => {
   const signatureName = "Friends-Life-Signature";
   const receivedSignature = request?.header(signatureName);
-  let requestBody = {};
+  let requestBody = "";
 
   if (Object.keys(request.body).length !== 0) {
-    requestBody = request.body;
+    requestBody = JSON.stringify(request.body);
   } else if (Object.keys(request.params).length !== 0) {
-    requestBody = request.params;
+    requestBody = JSON.stringify(request.params);
   } else if (
     Object.keys(request.body).length === 0 &&
     Object.keys(request.params).length === 0
@@ -26,7 +26,7 @@ export const verifyHmacSignature = async (
   if (secretKey === undefined) return false;
 
   const calculatedSignature = generateHmacSignature(
-    JSON.stringify(requestBody),
+    requestBody,
     secretKey
   );
 

@@ -6,11 +6,12 @@ import {
   updateAttendance,
   deleteAttendance,
 } from "../controllers/attendance-controller";
+import { verifyHmacSignature } from "../middleware/verifySignature";
 
 export const attendanceRouter = express.Router();
 
-attendanceRouter.get("/", findAttendance);
-attendanceRouter.get("/:attendanceId", showAttendance);
-attendanceRouter.post("/", createAttendance);
-attendanceRouter.patch("/:attendanceId", updateAttendance);
-attendanceRouter.delete("/:attendanceId", deleteAttendance);
+attendanceRouter.get("/", verifyHmacSignature, findAttendance);
+attendanceRouter.get("/:attendanceId", verifyHmacSignature, showAttendance);
+attendanceRouter.post("/", verifyHmacSignature, createAttendance);
+attendanceRouter.patch("/:attendanceId", verifyHmacSignature, updateAttendance);
+attendanceRouter.delete("/:attendanceId", verifyHmacSignature, deleteAttendance);
