@@ -33,6 +33,24 @@ export const showUser = async (request: Request, response: Response) => {
   }
 };
 
+// GET /{firebaseID}
+export const getUser = async (request: Request, response: Response) => {
+  const { firebaseId } = request.params;
+
+  if (!firebaseId) {
+    console.log(firebaseId)
+    return response.status(404).json({ error: CommonErrors.NotFound });
+  }
+
+  try {
+    const user = await User.findOne({ firebaseUserId: firebaseId });
+
+    return response.status(200).json(user);
+  } catch (e) {
+    return response.status(500).json({ error: e });
+  }
+};
+
 // POST /
 export const createUser = async (request: Request, response: Response) => {
   try {
