@@ -6,11 +6,12 @@ import {
   updatePost,
   deletePost,
 } from "../controllers/post-controller";
+import { verifyHmacSignature } from "../middleware/verifySignature";
 
 export const postRouter = Router();
 
-postRouter.get("/", findPosts);
-postRouter.get("/:postId", showPost);
-postRouter.post("/", createPost);
-postRouter.patch("/:postId", updatePost);
-postRouter.delete("/:postId", deletePost);
+postRouter.get("/", verifyHmacSignature, findPosts);
+postRouter.get("/:postId", verifyHmacSignature, showPost);
+postRouter.post("/", verifyHmacSignature, createPost);
+postRouter.patch("/:postId", verifyHmacSignature, updatePost);
+postRouter.delete("/:postId", verifyHmacSignature, deletePost);

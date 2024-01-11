@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { generateHmacSignature } from "../middleware/verifySignature";
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -22,8 +23,12 @@ describe("INSERT /report/", () => {
       reportBody: "great work!",
       date: "2023-12-07T06:00:00.000Z",
     };
-
-    const res = await request(app).post("/report").send(reportBody);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(reportBody),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app).post("/report").send(reportBody).set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(reportBody);
     reportIds.push(res.body._id);
@@ -32,7 +37,7 @@ describe("INSERT /report/", () => {
 
 describe("GET /report/", () => {
   it("should return report and contain all reportIds", async () => {
-    const res = await request(app).get("/report");
+    const res = await request(app).get("/report").set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     // Ensure that the response body is not empty
