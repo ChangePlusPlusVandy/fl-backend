@@ -6,11 +6,12 @@ import {
   updateFriend,
   deleteFriend,
 } from "../controllers/friend-controller";
+import { verifyHmacSignature } from "../middleware/verifySignature";
 
 export const friendRouter = Router();
 
-friendRouter.get("/", findFriends);
-friendRouter.get("/:friendId", showFriend);
-friendRouter.post("/", createFriend);
-friendRouter.patch("/:friendId", updateFriend);
-friendRouter.delete("/:friendId", deleteFriend);
+friendRouter.get("/", verifyHmacSignature, findFriends);
+friendRouter.get("/:friendId", verifyHmacSignature, showFriend);
+friendRouter.post("/", verifyHmacSignature, createFriend);
+friendRouter.patch("/:friendId", verifyHmacSignature, updateFriend);
+friendRouter.delete("/:friendId", verifyHmacSignature, deleteFriend);

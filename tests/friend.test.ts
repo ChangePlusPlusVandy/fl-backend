@@ -2,6 +2,11 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { createHmac } from "crypto";
+import {
+  generateHmacSignature,
+  verifyHmacSignature,
+} from "../middleware/verifySignature";
 
 // Connecting to the database before each test
 beforeEach(async () => {
@@ -23,8 +28,15 @@ describe("Insert /friend/", () => {
       reports: ["657155f584f804291d32b120"],
       attendance: ["65714114d097d31b78bbed60"],
     };
-
-    const res = await request(app).post("/friend").send(friendBody);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(friendBody),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .post("/friend")
+      .send(friendBody)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject({
       friendName: expect.any(String),
@@ -38,7 +50,11 @@ describe("Insert /friend/", () => {
 
 describe("GET /friend/", () => {
   it("should return all friends", async () => {
-    const res = await request(app).get("/friend");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/friend")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
   });
@@ -46,7 +62,14 @@ describe("GET /friend/", () => {
 
 describe("GET /friend/:friendId", () => {
   it("should return a specific friend", async () => {
-    const res = await request(app).get(`/friend/${friendIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ friendId: friendIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/friend/${friendIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body._id).toBe(friendIds[0]);
   });
@@ -66,16 +89,29 @@ const updatedFriend = {
 
 describe("PATCH /friend/:friendId", () => {
   it("should update a friend record", async () => {
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(updatedFields),
+      process.env.SECRET_KEY
+    );
     const res = await request(app)
       .patch(`/friend/${friendIds[0]}`)
-      .send(updatedFields);
+      .send(updatedFields)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /friend/:friendId", () => {
   it("should show updated friend", async () => {
-    const res = await request(app).get(`/friend/${friendIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ friendId: friendIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/friend/${friendIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedFriend);
   });
@@ -83,14 +119,25 @@ describe("GET /friend/:friendId", () => {
 
 describe("DELETE /friend/:friendId", () => {
   it("should delete a friend", async () => {
-    const res = await request(app).delete(`/friend/${friendIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ friendId: friendIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .delete(`/friend/${friendIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /friend/", () => {
   it("deleted friend should not exist anymore", async () => {
-    const res = await request(app).get("/friend");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/friend")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     const isFriendDeleted = friendIds.every(

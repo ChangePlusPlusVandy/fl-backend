@@ -6,11 +6,12 @@ import {
   updateMessage,
   deleteMessage,
 } from "../controllers/message-controller";
+import { verifyHmacSignature } from "../middleware/verifySignature";
 
 export const messageRouter = express.Router();
 
-messageRouter.get("/", getAllMessages);
-messageRouter.get("/:messageId", getMessage);
-messageRouter.post("/", createMessage);
-messageRouter.patch("/:messageId", updateMessage);
-messageRouter.delete("/:messageId", deleteMessage);
+messageRouter.get("/", verifyHmacSignature, getAllMessages);
+messageRouter.get("/:messageId", verifyHmacSignature, getMessage);
+messageRouter.post("/", verifyHmacSignature, createMessage);
+messageRouter.patch("/:messageId", verifyHmacSignature, updateMessage);
+messageRouter.delete("/:messageId", verifyHmacSignature, deleteMessage);

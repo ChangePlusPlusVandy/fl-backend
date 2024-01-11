@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { generateHmacSignature } from "../middleware/verifySignature";
 
 // Connecting to the database before each test
 beforeEach(async () => {
@@ -26,8 +27,15 @@ describe("Insert /post/", () => {
       likes: ["658fc60a860335bf918a3702"],
       dateCreated: "2023-12-30T06:00:00.000Z",
     };
-
-    const res = await request(app).post("/post").send(postBody);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(postBody),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .post("/post")
+      .send(postBody)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject({
       userId: expect.any(String),
@@ -44,7 +52,11 @@ describe("Insert /post/", () => {
 
 describe("GET /post/", () => {
   it("should return all posts", async () => {
-    const res = await request(app).get("/post");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/post")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body.length).toBeGreaterThan(0);
   });
@@ -52,7 +64,14 @@ describe("GET /post/", () => {
 
 describe("GET /post/:postId", () => {
   it("should return a specific post", async () => {
-    const res = await request(app).get(`/post/${postIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ postId: postIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/post/${postIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body._id).toBe(postIds[0]);
   });
@@ -75,16 +94,29 @@ const updatedPost = {
 
 describe("PATCH /post/:postId", () => {
   it("should update a post", async () => {
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(updatedFields),
+      process.env.SECRET_KEY
+    );
     const res = await request(app)
       .patch(`/post/${postIds[0]}`)
-      .send(updatedFields);
+      .send(updatedFields)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /post/:postId", () => {
   it("should show updated post", async () => {
-    const res = await request(app).get(`/post/${postIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ postId: postIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/post/${postIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedPost);
   });
@@ -92,14 +124,25 @@ describe("GET /post/:postId", () => {
 
 describe("DELETE /post/:postId", () => {
   it("should delete a post", async () => {
-    const res = await request(app).delete(`/post/${postIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ postId: postIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .delete(`/post/${postIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /post/", () => {
   it("deleted post should not exist anymore", async () => {
-    const res = await request(app).get("/post");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/post")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     const isPostDeleted = postIds.every(

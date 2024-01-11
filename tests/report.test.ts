@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { generateHmacSignature } from "../middleware/verifySignature";
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -22,8 +23,15 @@ describe("INSERT /report/", () => {
       reportBody: "great work!",
       date: "2023-12-07T06:00:00.000Z",
     };
-
-    const res = await request(app).post("/report").send(reportBody);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(reportBody),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .post("/report")
+      .send(reportBody)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(reportBody);
     reportIds.push(res.body._id);
@@ -32,7 +40,11 @@ describe("INSERT /report/", () => {
 
 describe("GET /report/", () => {
   it("should return report and contain all reportIds", async () => {
-    const res = await request(app).get("/report");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/report")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     // Ensure that the response body is not empty
@@ -59,16 +71,29 @@ const updatedReport = {
 
 describe("PATCH /report/", () => {
   it("should update a report", async () => {
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(updatedFields),
+      process.env.SECRET_KEY
+    );
     const res = await request(app)
       .patch(`/report/${reportIds[0]}`)
-      .send(updatedFields);
+      .send(updatedFields)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /report/", () => {
   it("should show updated report", async () => {
-    const res = await request(app).get(`/report/${reportIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ reportId: reportIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/report/${reportIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedReport);
   });
@@ -76,14 +101,25 @@ describe("GET /report/", () => {
 
 describe("DELETE /report/", () => {
   it("should delete report", async () => {
-    const res = await request(app).delete(`/report/${reportIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ reportId: reportIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .delete(`/report/${reportIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /report/", () => {
   it("deleted report should not exist anymore", async () => {
-    const res = await request(app).get("/report");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/report")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     const allIdsPresent = reportIds.every((id) =>

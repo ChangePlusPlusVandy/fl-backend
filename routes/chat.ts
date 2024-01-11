@@ -7,9 +7,10 @@ import {
   updateChat,
   deleteChat,
 } from "../controllers/chat-controller";
+import { verifyHmacSignature } from "../middleware/verifySignature";
 
-chatRouter.get("/", getAllChats);
-chatRouter.get("/:chatId", getChat);
-chatRouter.post("/", createChat);
-chatRouter.patch("/:chatId", updateChat);
-chatRouter.delete("/:chatId", deleteChat);
+chatRouter.get("/", verifyHmacSignature, getAllChats);
+chatRouter.get("/:chatId", verifyHmacSignature, getChat);
+chatRouter.post("/", verifyHmacSignature, createChat);
+chatRouter.patch("/:chatId", verifyHmacSignature, updateChat);
+chatRouter.delete("/:chatId", verifyHmacSignature, deleteChat);

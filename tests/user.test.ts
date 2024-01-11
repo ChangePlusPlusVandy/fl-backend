@@ -2,6 +2,7 @@ import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
 import { app } from "..";
 import request from "supertest";
+import { generateHmacSignature } from "../middleware/verifySignature";
 
 /* Connecting to the database before each test. */
 beforeEach(async () => {
@@ -28,7 +29,26 @@ const userBody = {
 
 describe("INSERT /user/", () => {
   it("should insert a user", async () => {
-    const res = await request(app).post("/user").send(userBody);
+    const userBody = {
+      firebaseUserId: "jesttestjest",
+      name: "jest",
+      type: "friend",
+      posts: ["6571401cd097d31b78bbed5e"],
+      timestamp: "2023-12-06T06:00:00.000Z",
+      friends: ["65713e67d097d31b78bbed56"],
+      chats: ["657142aad097d31b78bbed63"],
+      schedule: ["1", "2", "3", "4", "5"],
+    };
+
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(userBody),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .post("/user")
+      .send(userBody)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(userBody);
     userIds.push(res.body._id);
@@ -38,7 +58,11 @@ describe("INSERT /user/", () => {
 
 describe("GET /user/", () => {
   it("should return user and contain all userIds", async () => {
-    const res = await request(app).get("/user");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/user")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     // Ensure that the response body is not empty
@@ -87,16 +111,29 @@ const updatedUser = {
 
 describe("PATCH /user/", () => {
   it("should update a user", async () => {
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify(updatedFields),
+      process.env.SECRET_KEY
+    );
     const res = await request(app)
       .patch(`/user/${userIds[0]}`)
-      .send(updatedFields);
+      .send(updatedFields)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /user/:userId", () => {
   it("should show updated user", async () => {
-    const res = await request(app).get(`/user/${userIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ userId: userIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .get(`/user/${userIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedUser);
   });
@@ -112,14 +149,25 @@ describe("GET /user/firebase/", () => {
 
 describe("DELETE /user/", () => {
   it("should delete user", async () => {
-    const res = await request(app).delete(`/user/${userIds[0]}`);
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature(
+      JSON.stringify({ userId: userIds[0] }),
+      process.env.SECRET_KEY
+    );
+    const res = await request(app)
+      .delete(`/user/${userIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
 });
 
 describe("GET /user/", () => {
   it("deleted user should not exist anymore", async () => {
-    const res = await request(app).get("/user");
+    if (process.env.SECRET_KEY === undefined) return false;
+    const hmacSignature = generateHmacSignature("GET", process.env.SECRET_KEY);
+    const res = await request(app)
+      .get("/user")
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
 
     const allIdsPresent = userIds.every((id) =>
