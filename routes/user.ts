@@ -13,6 +13,7 @@ export const userRouter = Router();
 
 userRouter.get("/", verifyHmacSignature, findUsers);
 userRouter.get("/:userId", verifyHmacSignature, showUser);
+userRouter.get("/firebase/:firebaseId", verifyHmacSignature, getUser);
 userRouter.post("/", verifyHmacSignature, createUser);
 userRouter.patch("/:userId", verifyHmacSignature, updateUser);
 userRouter.delete("/:userId", verifyHmacSignature, deleteUser);
