@@ -12,6 +12,7 @@ import { messageRouter } from "./routes/message";
 import { postRouter } from "./routes/post";
 import { reportRouter } from "./routes/report";
 import { userRouter } from "./routes/user";
+import { authRouter } from "./routes/auth";
 
 dotenv.config();
 
@@ -46,3 +47,4 @@ app.use("/message", messageRouter);
 app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/user", userRouter);
+app.use("/auth", authRouter);
