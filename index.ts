@@ -28,11 +28,20 @@ const PORT: number = parseInt(process.env.PORT || "3001");
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200,
-  allowedHeaders: ["Content-Type", "Friends-Life-Signature"],
+  allowedHeaders: "*",
 };
 
 app.use(cors(corsOptions));
 app.options("*", cors(corsOptions));
+
+app.use((req, res, next) => {
+  // Allow unauthenticated access to the OPTIONS method
+  if (req.method === "OPTIONS") {
+    return cors(corsOptions)(req, res, next);
+  }
+  // Continue with authentication for other methods
+  next();
+});
 
 app.use(express.json()); // Parses incoming JSON requests and puts the parsed data in req
 app.use(express.urlencoded({ extended: true }));
