@@ -27,7 +27,7 @@ const PORT: number = parseInt(process.env.PORT || "3001");
 
 const corsOptions = {
   origin: "*",
-  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  optionsSuccessStatus: 200,
   allowedHeaders: ["Content-Type", "Friends-Life-Signature"],
 };
 
