@@ -1,8 +1,6 @@
 import express, { Application, Request, Response } from "express";
 import cors from "cors";
 import mongoose from "mongoose";
-import admin from "firebase-admin";
-import { verifyToken } from "./middleware/verifyToken";
 import dotenv from "dotenv";
 
 import { attendanceRouter } from "./routes/attendance";
@@ -24,10 +22,18 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-export const app: Application = express();
+const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
 app.use(cors()); // Allow cross-origin requests (for frontend to communicate with backend on different ports/address)
+app.use((req, res, next) => {
+  res.header("Access-Control-Allow-Origin", "*");
+  res.header(
+    "Access-Control-Allow-Headers",
+    "Origin, X-Requested-With, Content-Type, Accept"
+  );
+  next();
+});
 app.use(express.json()); // Parses incoming JSON requests and puts the parsed data in req
 app.use(express.urlencoded({ extended: true }));
 app.get("/", (req: Request, res: Response) => {
@@ -48,3 +54,5 @@ app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+
+export default { app };

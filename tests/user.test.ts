@@ -84,7 +84,9 @@ describe("GET /user/:userId", () => {
       JSON.stringify({ userId: userIds[0] }),
       process.env.SECRET_KEY
     );
-    const res = await request(app).get(`/user/${userIds[0]}`).set("Friends-Life-Signature", hmacSignature);
+    const res = await request(app)
+      .get(`/user/${userIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(userBody);
   });
@@ -97,7 +99,9 @@ describe("GET /user/firebase", () => {
       JSON.stringify({ firebaseId: firebaseIds[0] }),
       process.env.SECRET_KEY
     );
-    const res = await request(app).get(`/user/firebase/${firebaseIds[0]}`).set("Friends-Life-Signature", hmacSignature);
+    const res = await request(app)
+      .get(`/user/firebase/${firebaseIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(userBody);
   });
@@ -155,7 +159,9 @@ describe("GET /user/firebase/", () => {
       JSON.stringify({ firebaseId: firebaseIds[0] }),
       process.env.SECRET_KEY
     );
-    const res = await request(app).get(`/user/firebase/${firebaseIds[0]}`).set("Friends-Life-Signature", hmacSignature);
+    const res = await request(app)
+      .get(`/user/firebase/${firebaseIds[0]}`)
+      .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject(updatedUser);
   });
