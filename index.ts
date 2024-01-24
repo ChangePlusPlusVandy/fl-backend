@@ -26,6 +26,11 @@ export const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
 app.use(cors()); // Allow cross-origin requests (for frontend to communicate with backend on different ports/address)
+const corsOptions = {
+  origin: "*",
+  optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+};
+app.use(cors(corsOptions));
 app.use((req, res, next) => {
   res.header("Access-Control-Allow-Origin", "*");
   res.header(
