@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-const app: Application = express();
+export const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
 app.use(cors()); // Allow cross-origin requests (for frontend to communicate with backend on different ports/address)
@@ -54,5 +54,3 @@ app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
-
-export default { app };
