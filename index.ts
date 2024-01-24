@@ -25,20 +25,15 @@ if (process.env.NODE_ENV !== "test") {
 export const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
-app.use(cors()); // Allow cross-origin requests (for frontend to communicate with backend on different ports/address)
 const corsOptions = {
   origin: "*",
   optionsSuccessStatus: 200, // some legacy browsers (IE11, various SmartTVs) choke on 204
+  allowedHeaders: ["Content-Type", "Friends-Life-Signature"],
 };
+
 app.use(cors(corsOptions));
-app.use((req, res, next) => {
-  res.header("Access-Control-Allow-Origin", "*");
-  res.header(
-    "Access-Control-Allow-Headers",
-    "Origin, X-Requested-With, Content-Type, Accept"
-  );
-  next();
-});
+app.options("*", cors(corsOptions));
+
 app.use(express.json()); // Parses incoming JSON requests and puts the parsed data in req
 app.use(express.urlencoded({ extended: true }));
 app.get("/", (req: Request, res: Response) => {
