@@ -1,5 +1,5 @@
 import { type Request, type Response, type NextFunction } from "express";
-import { createHmac } from "crypto";
+import cryptoJs from "crypto-js";
 
 export const verifyHmacSignature = async (
   request: Request,
@@ -25,10 +25,7 @@ export const verifyHmacSignature = async (
 
   if (secretKey === undefined) return false;
 
-  const calculatedSignature = generateHmacSignature(
-    requestBody,
-    secretKey
-  );
+  const calculatedSignature = generateHmacSignature(requestBody, secretKey);
 
   if (
     receivedSignature !== undefined &&
@@ -58,8 +55,8 @@ const secureCompare = (a: string, b: string) => {
 export const generateHmacSignature = (
   requestBody: string,
   secretKey: string
-) => {
-  const secret = Buffer.from(secretKey, "base64");
-  const hmac = createHmac("sha256", secret);
-  return hmac.update(requestBody).digest().toString("base64");
+): string => {
+  const hmac = cryptoJs.HmacSHA256(requestBody, secretKey);
+  const signatureBase64 = cryptoJs.enc.Base64.stringify(hmac);
+  return signatureBase64;
 };
