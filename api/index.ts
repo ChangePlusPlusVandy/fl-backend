@@ -3,14 +3,14 @@ import cors from "cors";
 import mongoose from "mongoose";
 import dotenv from "dotenv";
 
-import { attendanceRouter } from "./routes/attendance";
-import { chatRouter } from "./routes/chat";
-import { friendRouter } from "./routes/friend";
-import { messageRouter } from "./routes/message";
-import { postRouter } from "./routes/post";
-import { reportRouter } from "./routes/report";
-import { userRouter } from "./routes/user";
-import { authRouter } from "./routes/auth";
+import { attendanceRouter } from "../routes/attendance";
+import { chatRouter } from "../routes/chat";
+import { friendRouter } from "../routes/friend";
+import { messageRouter } from "../routes/message";
+import { postRouter } from "../routes/post";
+import { reportRouter } from "../routes/report";
+import { userRouter } from "../routes/user";
+import { authRouter } from "../routes/auth";
 
 dotenv.config();
 

@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
-import app from "..";
+import app from "../api";
 import request from "supertest";
 import { createHmac } from "crypto";
 import {

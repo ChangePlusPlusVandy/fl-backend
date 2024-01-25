@@ -17,5 +17,6 @@
         "Access-Control-Allow-Headers": "Origin, Content-Type, X-Auth-Token"
       }
     }
-  ]
+  ],
+  "rewrites": [{ "source": "/api/(.*)", "destination": "/api" }]
 }
