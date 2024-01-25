@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
 import { describe, expect } from "@jest/globals";
-import app from "../api";
+import app from "..";
 import request from "supertest";
 import { generateHmacSignature } from "../middleware/verifySignature";
 
