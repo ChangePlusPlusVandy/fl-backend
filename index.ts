@@ -22,7 +22,7 @@ if (process.env.NODE_ENV !== "test") {
   });
 }
 
-export const app: Application = express();
+const app: Application = express();
 const PORT: number = parseInt(process.env.PORT || "3001");
 
 const corsOptions = {
@@ -63,3 +63,5 @@ app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+
+export default app;
