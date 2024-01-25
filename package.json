@@ -23,7 +23,7 @@
   },
   "scripts": {
     "test": "cross-env NODE_ENV=test jest --testTimeout=5000",
-    "start": "ts-node index.ts",
+    "start": "ts-node api/index.ts",
     "format": "prettier --write ."
   }
 }
