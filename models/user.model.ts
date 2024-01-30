@@ -10,6 +10,14 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  emailAddress: {
+    type: String,
+    required: true,
+  },
+  forgotPasswordCode: {
+    type: String,
+    required: false,
+  },
   type: {
     type: String,
     required: true,
