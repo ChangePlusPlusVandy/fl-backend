@@ -19,6 +19,7 @@ let firebaseIds: string[] = [];
 const userBody = {
   firebaseUserId: "jesttestjest",
   name: "jest",
+  emailAddress: "test@test.com",
   type: "friend",
   posts: ["6571401cd097d31b78bbed5e"],
   timestamp: "2023-12-06T06:00:00.000Z",
@@ -29,17 +30,6 @@ const userBody = {
 
 describe("INSERT /user/", () => {
   it("should insert a user", async () => {
-    const userBody = {
-      firebaseUserId: "jesttestjest",
-      name: "jest",
-      type: "friend",
-      posts: ["6571401cd097d31b78bbed5e"],
-      timestamp: "2023-12-06T06:00:00.000Z",
-      friends: ["65713e67d097d31b78bbed56"],
-      chats: ["657142aad097d31b78bbed63"],
-      schedule: ["1", "2", "3", "4", "5"],
-    };
-
     if (process.env.SECRET_KEY === undefined) return false;
     const hmacSignature = generateHmacSignature(
       JSON.stringify(userBody),
