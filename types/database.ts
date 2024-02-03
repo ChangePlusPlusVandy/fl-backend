@@ -4,6 +4,7 @@ export interface IUser extends Document {
   firebaseUserId: string
   name: string;
   emailAddress: string
+  phoneNumber: string
   forgotPasswordCode: string
   type: string;
   posts: mongoose.Types.ObjectId[];

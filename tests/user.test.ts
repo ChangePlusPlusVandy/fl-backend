@@ -20,6 +20,7 @@ const userBody = {
   firebaseUserId: "jesttestjest",
   name: "jest",
   emailAddress: "test@test.com",
+  phoneNumber: "408-192-5432",
   type: "friend",
   posts: ["6571401cd097d31b78bbed5e"],
   timestamp: "2023-12-06T06:00:00.000Z",
