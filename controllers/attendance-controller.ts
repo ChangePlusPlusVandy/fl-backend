@@ -1,14 +1,18 @@
 import express, { Request, Response } from "express";
 import { Attendance } from "../models/attendance.model";
 import { CommonErrors } from "../utils/common-errors";
+import { IAttendance } from "../types/database";
+import { FilterQuery } from "mongoose";
 
 // GET /
 // @TODO: add filtering
 export const findAttendance = async (request: Request, response: Response) => {
-  const { filter } = request.body;
+  const { filter } = request.query;
 
   try {
-    const attendance = await Attendance.find(filter ?? {});
+    const attendance = await Attendance.find(
+      (filter as FilterQuery<IAttendance>) ?? {}
+    );
 
     return response.status(200).json(attendance);
   } catch (e) {
