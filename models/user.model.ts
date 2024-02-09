@@ -14,6 +14,10 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  phoneNumber: {
+    type: String,
+    required: false,
+  },
   forgotPasswordCode: {
     type: String,
     required: false,
