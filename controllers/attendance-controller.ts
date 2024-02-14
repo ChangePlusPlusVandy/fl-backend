@@ -7,12 +7,23 @@ import { FilterQuery } from "mongoose";
 // GET /
 // @TODO: add filtering
 export const findAttendance = async (request: Request, response: Response) => {
-  const { filter } = request.query;
+  let filterQuery = request.query.filter ? JSON.parse(request.query.filter as string) : {};
+  if (filterQuery.date) {
+    const startDate = new Date(filterQuery.date);
+    const endDate = new Date(startDate);
+    endDate.setDate(startDate.getDate() + 1);
+
+    filterQuery = {
+      ...filterQuery,
+      date: {
+        $gte: startDate,
+        $lt: endDate
+      }
+    };
+  }
 
   try {
-    const attendance = await Attendance.find(
-      (filter as FilterQuery<IAttendance>) ?? {}
-    );
+    const attendance = await Attendance.find(filterQuery as FilterQuery<IAttendance>);
 
     return response.status(200).json(attendance);
   } catch (e) {
