@@ -72,7 +72,7 @@ export const createUser = async (request: Request, response: Response) => {
 
 // PUT /{oid}
 export const updateUser = async (request: Request, response: Response) => {
-  const { userId } = request.body;
+  const { userId } = request.params;
 
   if (!userId) {
     return response.status(400).json({ error: CommonErrors.BadRequest });
