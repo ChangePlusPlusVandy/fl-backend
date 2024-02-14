@@ -38,7 +38,7 @@ export const getUser = async (request: Request, response: Response) => {
   const { firebaseId } = request.params;
 
   if (!firebaseId) {
-    console.log(firebaseId)
+    console.log(firebaseId);
     return response.status(404).json({ error: CommonErrors.NotFound });
   }
 
@@ -72,7 +72,7 @@ export const createUser = async (request: Request, response: Response) => {
 
 // PUT /{oid}
 export const updateUser = async (request: Request, response: Response) => {
-  const { userId } = request.params;
+  const { userId } = request.body;
 
   if (!userId) {
     return response.status(400).json({ error: CommonErrors.BadRequest });
