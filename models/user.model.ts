@@ -17,6 +17,7 @@ const userSchema = new mongoose.Schema<IUser>({
   phoneNumber: {
     type: String,
     required: false,
+    default: "",
   },
   forgotPasswordCode: {
     type: String,
@@ -52,7 +53,7 @@ const userSchema = new mongoose.Schema<IUser>({
     {
       type: String,
     },
-  ]
+  ],
 });
 
-export const User = mongoose.model<IUser>('User', userSchema);
+export const User = mongoose.model<IUser>("User", userSchema);
