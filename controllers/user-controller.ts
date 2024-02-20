@@ -70,7 +70,7 @@ export const createUser = async (request: Request, response: Response) => {
   }
 };
 
-// PUT /{oid}
+// PATCH /{oid}
 export const updateUser = async (request: Request, response: Response) => {
   const { userId } = request.params;
 
