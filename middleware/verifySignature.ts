@@ -14,9 +14,13 @@ export const verifyHmacSignature = async (
     requestBody = JSON.stringify(request.body);
   } else if (Object.keys(request.params).length !== 0) {
     requestBody = JSON.stringify(request.params);
-  } else if (
+  } else if (Object.keys(request.query).length !== 0) {
+    requestBody = JSON.stringify(request.query);
+  }
+  else if (
     Object.keys(request.body).length === 0 &&
-    Object.keys(request.params).length === 0
+    Object.keys(request.params).length === 0 &&
+    Object.keys(request.query).length == 0
   ) {
     requestBody = request.method;
   }
