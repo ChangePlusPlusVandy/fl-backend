@@ -20,6 +20,7 @@ const userBody = {
   firebaseUserId: "jesttestjest",
   name: "jest",
   emailAddress: "test@test.com",
+  phoneNumber: "123",
   type: "friend",
   posts: ["6571401cd097d31b78bbed5e"],
   timestamp: "2023-12-06T06:00:00.000Z",
@@ -99,11 +100,13 @@ describe("GET /user/firebase", () => {
 
 const updatedFields = {
   name: "updated jest",
+  
 };
 
 const updatedUser = {
   firebaseUserId: "jesttestjest",
   name: "updated jest",
+  phoneNumber: "1234",
   type: "friend",
   posts: ["6571401cd097d31b78bbed5e"],
   timestamp: "2023-12-06T06:00:00.000Z",
@@ -116,12 +119,12 @@ describe("PATCH /user/", () => {
   it("should update a user", async () => {
     if (process.env.SECRET_KEY === undefined) return false;
     const hmacSignature = generateHmacSignature(
-      JSON.stringify(updatedFields),
+      JSON.stringify(updatedUser),
       process.env.SECRET_KEY
     );
     const res = await request(app)
       .patch(`/user/${userIds[0]}`)
-      .send(updatedFields)
+      .send(updatedUser)
       .set("Friends-Life-Signature", hmacSignature);
     expect(res.statusCode).toBe(204);
   });
