@@ -10,7 +10,8 @@ const friendSchema = new mongoose.Schema<IFriend>(
     },
     profilePicture: {
       type: String,
-      required: true,
+      default:
+        "https://res.cloudinary.com/dvrcdxqex/image/upload/v1707870630/defaultProfilePic.png",
       trim: true,
     },
     reports: [
