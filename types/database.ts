@@ -1,17 +1,17 @@
 import mongoose from "mongoose";
 
 export interface IUser extends Document {
-  firebaseUserId: string
+  firebaseUserId: string;
   name: string;
-  emailAddress: string
-  phoneNumber: string
-  forgotPasswordCode: string
+  emailAddress: string;
+  phoneNumber: string;
+  forgotPasswordCode: string;
   type: string;
   posts: mongoose.Types.ObjectId[];
   timestamp: Date;
   friends: mongoose.Types.ObjectId[];
   chats: mongoose.Types.ObjectId[];
-  schedule: string[]
+  schedule: string[];
 }
 
 export interface IPost extends Document {
@@ -37,6 +37,7 @@ export interface IFriend extends Document {
   profilePicture: string;
   reports: mongoose.Types.ObjectId[];
   attendance: mongoose.Types.ObjectId[];
+  schedule: number[];
 }
 
 export interface IChat extends Document {
@@ -49,6 +50,8 @@ export interface IAttendance extends Document {
   friendIds: mongoose.Types.ObjectId;
   timeIns: Date[];
   timeOuts: Date[];
+  transportation: boolean;
+  socialClub: boolean;
 }
 
 export interface IReport extends Document {
