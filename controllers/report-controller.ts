@@ -1,5 +1,6 @@
 import { Request, Response } from "express";
 import { Report } from "../models/report.model";
+import { Friend } from "../models/friend.model";
 import { CommonErrors } from "../utils/common-errors";
 
 export const findReports = async (request: Request, response: Response) => {
@@ -41,6 +42,9 @@ export const createReport = async (request: Request, response: Response) => {
     }
 
     await report.save();
+
+    const friend = await Friend.findById(report.friendId);
+    friend?.reports.push(report._id);
 
     return response.status(200).json(report);
   } catch (e) {
