@@ -45,6 +45,7 @@ export const createReport = async (request: Request, response: Response) => {
 
     const friend = await Friend.findById(report.friendId);
     friend?.reports.push(report._id);
+    await friend?.save();
 
     return response.status(200).json(report);
   } catch (e) {
