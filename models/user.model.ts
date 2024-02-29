@@ -10,6 +10,12 @@ const userSchema = new mongoose.Schema<IUser>({
     type: String,
     required: true,
   },
+  profilePicture: {
+    type: String,
+    required: false,
+    default:
+      "https://res.cloudinary.com/dvrcdxqex/image/upload/v1707870630/defaultProfilePic.png",
+  },
   emailAddress: {
     type: String,
     required: true,
