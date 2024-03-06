@@ -42,7 +42,8 @@ export interface IFriend extends Document {
 }
 
 export interface IChat extends Document {
-  users: mongoose.Types.ObjectId[];
+  user1: mongoose.Types.ObjectId;
+  user2: mongoose.Types.ObjectId;
   messages: mongoose.Types.ObjectId[];
 }
 
