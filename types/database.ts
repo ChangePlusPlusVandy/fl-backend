@@ -13,6 +13,7 @@ export interface IUser extends Document {
   friends: mongoose.Types.ObjectId[];
   chats: mongoose.Types.ObjectId[];
   schedule: string[];
+  approved: boolean;
 }
 
 export interface IPost extends Document {

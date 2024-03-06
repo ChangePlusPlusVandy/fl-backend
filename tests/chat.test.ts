@@ -19,7 +19,8 @@ let chatIds: string[] = [];
 describe("INSERT /chat/", () => {
   it("should insert a chat", async () => {
     const chatBody = {
-      users: ["65713d71d097d31b78bbed53"],
+      user1: "65713d71d097d31b78bbed53",
+      user2: "65beaab505760378548eb708",
       messages: ["65715f56955a8e773cca2cb7"],
     };
     if (process.env.SECRET_KEY === undefined) return false;
@@ -63,7 +64,8 @@ const updatedFields = {
 };
 
 const updatedChat = {
-  users: ["65713d71d097d31b78bbed53"],
+  user1: "65713d71d097d31b78bbed53",
+  user2: "65beaab505760378548eb708",
   messages: ["6590701e493a636b9b9d84aa"],
 };
 

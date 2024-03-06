@@ -20,7 +20,7 @@ describe("Insert /attendance/", () => {
   it("should create an attendance record", async () => {
     const attendanceBody = {
       date: "2023-12-30T06:00:00.000Z",
-      friendIds: "65713e67d097d31b78bbed56",
+      friendId: "65713e67d097d31b78bbed56",
       timeIns: ["2023-12-30T07:00:00.000Z"],
       timeOuts: ["2023-12-30T08:00:00.000Z"],
     };
@@ -36,9 +36,11 @@ describe("Insert /attendance/", () => {
     expect(res.statusCode).toBe(200);
     expect(res.body).toMatchObject({
       date: expect.any(String),
-      friendIds: expect.any(String),
+      friendId: expect.any(String),
       timeIns: expect.any(Array),
       timeOuts: expect.any(Array),
+      socialClub: expect.any(Boolean),
+      transportation: expect.any(Boolean),
     });
     attendanceIds.push(res.body._id);
   });
@@ -77,9 +79,11 @@ const updatedFields = {
 
 const updatedAttendance = {
   date: "2023-12-30T06:00:00.000Z",
-  friendIds: "65713e67d097d31b78bbed56",
+  friendId: "65713e67d097d31b78bbed56",
   timeIns: ["2023-12-30T09:00:00.000Z"],
   timeOuts: ["2023-12-30T08:00:00.000Z"],
+  socialClub: false,
+  transportation: false,
 };
 
 describe("PATCH /attendance/:attendanceId", () => {

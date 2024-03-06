@@ -60,6 +60,10 @@ const userSchema = new mongoose.Schema<IUser>({
       type: String,
     },
   ],
+  approved: {
+    type: Boolean,
+    default: false,
+  },
 });
 
 export const User = mongoose.model<IUser>("User", userSchema);
