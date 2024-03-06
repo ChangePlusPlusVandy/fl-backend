@@ -1,6 +1,7 @@
-import express, { Request, Response } from "express";
+import { Request, Response } from "express";
 import { Message } from "../models/message.model";
 import { CommonErrors } from "../utils/common-errors";
+import { Chat } from "../models/chat.model";
 
 // GET that returns all messages in the database
 export const getAllMessages = async (request: Request, response: Response) => {
@@ -42,6 +43,10 @@ export const createMessage = async (request: Request, response: Response) => {
     }
 
     await message.save();
+
+    const chat = await Chat.findById(message.chatId);
+    chat?.messages.push(message._id);
+    await chat?.save();
 
     return response.status(200).json(message);
   } catch (e) {

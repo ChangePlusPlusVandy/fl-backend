@@ -3,11 +3,14 @@ import { Attendance } from "../models/attendance.model";
 import { CommonErrors } from "../utils/common-errors";
 import { IAttendance } from "../types/database";
 import { FilterQuery } from "mongoose";
+import { Friend } from "../models/friend.model";
 
 // GET /
 // @TODO: add filtering
 export const findAttendance = async (request: Request, response: Response) => {
-  let filterQuery = request.query.filter ? JSON.parse(request.query.filter as string) : {};
+  let filterQuery = request.query.filter
+    ? JSON.parse(request.query.filter as string)
+    : {};
   if (filterQuery.date) {
     const startDate = new Date(filterQuery.date);
     const endDate = new Date(startDate);
@@ -17,13 +20,15 @@ export const findAttendance = async (request: Request, response: Response) => {
       ...filterQuery,
       date: {
         $gte: startDate,
-        $lt: endDate
-      }
+        $lt: endDate,
+      },
     };
   }
 
   try {
-    const attendance = await Attendance.find(filterQuery as FilterQuery<IAttendance>);
+    const attendance = await Attendance.find(
+      filterQuery as FilterQuery<IAttendance>
+    );
 
     return response.status(200).json(attendance);
   } catch (e) {
@@ -63,6 +68,10 @@ export const createAttendance = async (
     }
 
     await attendance.save();
+
+    const friend = await Friend.findById(attendance.friendId);
+    friend?.attendance.push(attendance._id);
+    await friend?.save();
 
     return response.status(200).json(attendance);
   } catch (e) {

@@ -7,7 +7,7 @@ const attendanceSchema = new mongoose.Schema<IAttendance>(
       type: Date,
       required: true,
     },
-    friendIds: {
+    friendId: {
       type: mongoose.Schema.Types.ObjectId,
       ref: "Friend",
     },

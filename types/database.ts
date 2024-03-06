@@ -48,7 +48,7 @@ export interface IChat extends Document {
 
 export interface IAttendance extends Document {
   date: Date;
-  friendIds: mongoose.Types.ObjectId;
+  friendId: mongoose.Types.ObjectId;
   timeIns: Date[];
   timeOuts: Date[];
   transportation: boolean;
