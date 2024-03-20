@@ -11,6 +11,7 @@ import { postRouter } from "./routes/post";
 import { reportRouter } from "./routes/report";
 import { userRouter } from "./routes/user";
 import { authRouter } from "./routes/auth";
+import { emailRouter } from "./routes/email";
 
 dotenv.config();
 
@@ -63,5 +64,6 @@ app.use("/post", postRouter);
 app.use("/report", reportRouter);
 app.use("/user", userRouter);
 app.use("/auth", authRouter);
+app.use("/email", emailRouter);
 
 export default app;
