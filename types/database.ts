@@ -36,6 +36,7 @@ export interface IMessage extends Document {
 
 export interface IFriend extends Document {
   friendName: string;
+  families: mongoose.Types.ObjectId[];
   profilePicture: string;
   reports: mongoose.Types.ObjectId[];
   attendance: mongoose.Types.ObjectId[];

@@ -8,6 +8,12 @@ const friendSchema = new mongoose.Schema<IFriend>(
       required: true,
       trim: true,
     },
+    families: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User",
+      },
+    ],
     profilePicture: {
       type: String,
       default:
