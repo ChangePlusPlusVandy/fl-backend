@@ -46,9 +46,11 @@ export const createChat = async (request: Request, response: Response) => {
 
     const user1 = await User.findById(chat.user1);
     user1?.chats.push(chat._id);
+    await user1?.save();
 
     const user2 = await User.findById(chat.user2);
     user2?.chats.push(chat._id);
+    await user2?.save();
 
     return response.status(200).json(chat);
   } catch (e) {
