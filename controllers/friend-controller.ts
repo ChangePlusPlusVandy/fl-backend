@@ -1,6 +1,8 @@
 import express, { Request, Response } from "express";
 import { Friend } from "../models/friend.model";
+import { Attendance } from "../models/attendance.model";
 import { CommonErrors } from "../utils/common-errors";
+import * as csv from "fast-csv";
 
 // GET /
 // @TODO: add filtering
@@ -99,5 +101,47 @@ export const deleteFriend = async (request: Request, response: Response) => {
     return response.status(204).send();
   } catch (e) {
     return response.status(500).json({ error: e });
+  }
+};
+
+export const exportData = async (request: Request, response: Response) => {
+  try {
+    const friends = await Friend.find();
+    const csvStream = csv.format({ headers: true });
+
+    csvStream.pipe(response);
+
+    response.setHeader("Content-disposition", "attachment; filename=attendance.csv");
+    response.set("Content-Type", "text/csv");
+
+    for (const friend of friends) {
+      for (const attendance_id of friend.attendance) {
+        const attendance = await Attendance.findById(attendance_id);
+
+        if (attendance) {
+          for (let i = 0; i < attendance.timeIns.length; i++) {
+            if (attendance.timeIns[i] && attendance.timeOuts[i]) {
+              const dataRow = {
+                name: friend.friendName,
+                date: attendance.date.toLocaleDateString(),
+                timeIn: attendance.timeIns[i].toLocaleTimeString("it-IT"),
+                timeOut: attendance.timeOuts[i].toLocaleTimeString("it-IT"),
+                transportation: attendance.transportation,
+                socialClub: attendance.socialClub,
+              };
+              csvStream.write(dataRow);
+            }
+          }
+        }
+      }
+    }
+
+    await new Promise((resolve) => {
+      csvStream.on('finish', resolve);
+      csvStream.end();
+    });
+  } catch (err) {
+    console.error(err);
+    response.status(500).send("Internal server error");
   }
 };
