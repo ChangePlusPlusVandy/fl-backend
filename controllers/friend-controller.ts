@@ -104,6 +104,35 @@ export const deleteFriend = async (request: Request, response: Response) => {
   }
 };
 
+function translateDaysToWeekdays(inputArray: number[]) {
+  const dayMap = ["Su", "M", "T", "W", "R", "F", "Sa"];
+
+  const result = inputArray
+    .map((value, index) => (value === 1 ? dayMap[index] : ""))
+    .filter((day) => day !== "")
+    .join(", ");
+
+  return result;
+}
+
+function allPossibleDays(dayArray : number[]) {
+  const now = new Date();
+  const year = now.getFullYear();
+  const month = now.getMonth();
+  const today = now.getDate();
+
+  let count = 0;
+
+  for (let day = 1; day <= today; day++) {
+      const currentDay = new Date(year, month, day);
+      if (dayArray[currentDay.getDay()] === 1) {
+          count++;
+      }
+  }
+  
+  return count;
+}
+
 export const exportData = async (request: Request, response: Response) => {
   try {
     const friends = await Friend.find();
@@ -111,33 +140,75 @@ export const exportData = async (request: Request, response: Response) => {
 
     csvStream.pipe(response);
 
-    response.setHeader("Content-disposition", "attachment; filename=attendance.csv");
+    response.setHeader(
+      "Content-disposition",
+      "attachment; filename=attendance.csv"
+    );
     response.set("Content-Type", "text/csv");
 
+    const localeUS = "en-US";
+    const options = { weekday: "long" as const };
+
+    const now = new Date();
+
+    const currMonth = now.getMonth();
+
+    csvStream.write({Name: "", Date: "", DOW: "", Time_In: "", Time_Out: "", Transportation: "", Social_Club: ""});
+    csvStream.write({Name: now.toLocaleString(localeUS, { month: "long" as const }), Date: now.getFullYear().toString()});
+
     for (const friend of friends) {
+      const firstRow = {
+        Name: friend.friendName,
+        Date: "Schedule",
+        DOW: translateDaysToWeekdays(friend.schedule),
+      };
+      csvStream.write({});
+      csvStream.write(firstRow);
+      csvStream.write({});
+
+      let daysAttendedCorrectly = 0;
+      let daysAttendedIncorrectly = 0;
       for (const attendance_id of friend.attendance) {
         const attendance = await Attendance.findById(attendance_id);
 
-        if (attendance) {
+        if (attendance && attendance.date.getMonth() === currMonth) {
           for (let i = 0; i < attendance.timeIns.length; i++) {
             if (attendance.timeIns[i] && attendance.timeOuts[i]) {
               const dataRow = {
-                name: friend.friendName,
-                date: attendance.date.toLocaleDateString(),
-                timeIn: attendance.timeIns[i].toLocaleTimeString("it-IT"),
-                timeOut: attendance.timeOuts[i].toLocaleTimeString("it-IT"),
-                transportation: attendance.transportation,
-                socialClub: attendance.socialClub,
+                Name: "",
+                Date: attendance.date.toLocaleDateString(),
+                DOW: attendance.date.toLocaleString(localeUS, options),
+                Time_In: attendance.timeIns[i].toLocaleTimeString("it-IT"),
+                Time_Out: attendance.timeOuts[i].toLocaleTimeString("it-IT"),
+                Transportation: attendance.transportation,
+                Social_Club: attendance.socialClub,
               };
               csvStream.write(dataRow);
             }
           }
+          if(friend.schedule[attendance.date.getDay()] === 1) {
+            daysAttendedCorrectly++;
+          } else {
+            daysAttendedIncorrectly++;
+          }
         }
       }
+
+      const possibleDays = allPossibleDays(friend.schedule);
+      const attendance = daysAttendedCorrectly + " of " + possibleDays;
+      const statRow = {
+        Date: "Attended",
+        DOW: attendance,
+        Time_In: "Extra Days",
+        Time_Out: daysAttendedIncorrectly,
+      }
+
+      csvStream.write({});
+      csvStream.write(statRow);
     }
 
     await new Promise((resolve) => {
-      csvStream.on('finish', resolve);
+      csvStream.on("finish", resolve);
       csvStream.end();
     });
   } catch (err) {
