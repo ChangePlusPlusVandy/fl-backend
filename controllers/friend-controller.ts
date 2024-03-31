@@ -115,15 +115,18 @@ function translateDaysToWeekdays(inputArray: number[]) {
   return result;
 }
 
-function allPossibleDays(dayArray : number[]) {
+function allPossibleDays(dayArray : number[], desiredMonth : number, desiredYear : number) {
+  const year = desiredYear;
+  const month = desiredMonth;
+  let end = new Date(year, month, 0).getDate();
+
   const now = new Date();
-  const year = now.getFullYear();
-  const month = now.getMonth();
-  const today = now.getDate();
+  if(year === now.getFullYear() && month === now.getMonth()) {
+    end = now.getDate();
+  }
 
   let count = 0;
-
-  for (let day = 1; day <= today; day++) {
+  for (let day = 1; day <= end; day++) {
       const currentDay = new Date(year, month, day);
       if (dayArray[currentDay.getDay()] === 1) {
           count++;
@@ -133,8 +136,35 @@ function allPossibleDays(dayArray : number[]) {
   return count;
 }
 
+function getMonthName(monthNumber : number) {
+  const monthNames = [
+    "January", "February", "March",
+    "April", "May", "June",
+    "July", "August", "September",
+    "October", "November", "December"
+  ];
+
+  return monthNames[monthNumber];
+}
+
 export const exportData = async (request: Request, response: Response) => {
   try {
+    const now = new Date();
+    let desiredMonth = now.getMonth();
+    let desiredYear = now.getFullYear();
+
+    if(Object.keys(request.body).length > 0) {
+      const { month, year } = request.body;
+      if (typeof month !== 'number' || typeof year !== 'number') {
+        return response.status(400).json({ error: 'Invalid input. month and year are missing or the wrong type.' });
+      }
+      if (month < 0 || month > 11) {
+        return response.status(400).json({ error: 'Invalid month. Must be between 0 and 11.' });
+      }
+      desiredMonth = month;
+      desiredYear = year;
+    }
+
     const friends = await Friend.find();
     const csvStream = csv.format({ headers: true });
 
@@ -146,15 +176,8 @@ export const exportData = async (request: Request, response: Response) => {
     );
     response.set("Content-Type", "text/csv");
 
-    const localeUS = "en-US";
-    const options = { weekday: "long" as const };
-
-    const now = new Date();
-
-    const currMonth = now.getMonth();
-
     csvStream.write({Name: "", Date: "", DOW: "", Time_In: "", Time_Out: "", Transportation: "", Social_Club: ""});
-    csvStream.write({Name: now.toLocaleString(localeUS, { month: "long" as const }), Date: now.getFullYear().toString()});
+    csvStream.write({Name: getMonthName(desiredMonth), Date: desiredYear.toString()});
 
     for (const friend of friends) {
       const firstRow = {
@@ -171,15 +194,15 @@ export const exportData = async (request: Request, response: Response) => {
       for (const attendance_id of friend.attendance) {
         const attendance = await Attendance.findById(attendance_id);
 
-        if (attendance && attendance.date.getMonth() === currMonth) {
+        if (attendance && attendance.date.getMonth() === desiredMonth && attendance.date.getFullYear() === desiredYear) {
           for (let i = 0; i < attendance.timeIns.length; i++) {
             if (attendance.timeIns[i] && attendance.timeOuts[i]) {
               const dataRow = {
                 Name: "",
                 Date: attendance.date.toLocaleDateString(),
-                DOW: attendance.date.toLocaleString(localeUS, options),
-                Time_In: attendance.timeIns[i].toLocaleTimeString("it-IT"),
-                Time_Out: attendance.timeOuts[i].toLocaleTimeString("it-IT"),
+                DOW: attendance.date.toLocaleString("en-US", { weekday: "long" as const }),
+                Time_In: attendance.timeIns[i].toLocaleTimeString("en-US"),
+                Time_Out: attendance.timeOuts[i].toLocaleTimeString("en-US"),
                 Transportation: attendance.transportation,
                 Social_Club: attendance.socialClub,
               };
@@ -194,7 +217,7 @@ export const exportData = async (request: Request, response: Response) => {
         }
       }
 
-      const possibleDays = allPossibleDays(friend.schedule);
+      const possibleDays = allPossibleDays(friend.schedule, desiredMonth, desiredYear);
       const attendance = daysAttendedCorrectly + " of " + possibleDays;
       const statRow = {
         Date: "Attended",
