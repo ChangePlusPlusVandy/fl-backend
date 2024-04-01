@@ -153,16 +153,19 @@ export const exportData = async (request: Request, response: Response) => {
     let desiredMonth = now.getMonth();
     let desiredYear = now.getFullYear();
 
-    if(Object.keys(request.body).length > 0) {
-      const { month, year } = request.body;
-      if (typeof month !== 'number' || typeof year !== 'number') {
+    if(Object.keys(request.query).length > 0) {
+      let { month, year } = request.query;
+      if (typeof month != 'string' || typeof year != 'string') {
         return response.status(400).json({ error: 'Invalid input. month and year are missing or the wrong type.' });
       }
-      if (month < 0 || month > 11) {
+      const monthI = parseInt(month, 10);
+      const yearI = parseInt(year, 10);
+
+      if (monthI < 0 || monthI > 11) {
         return response.status(400).json({ error: 'Invalid month. Must be between 0 and 11.' });
       }
-      desiredMonth = month;
-      desiredYear = year;
+      desiredMonth = monthI;
+      desiredYear = yearI;
     }
 
     const friends = await Friend.find();
