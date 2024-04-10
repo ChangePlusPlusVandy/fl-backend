@@ -119,16 +119,29 @@ export const deleteUser = async (request: Request, response: Response) => {
       $or: [{ user1: userId }, { user2: userId }],
     });
 
+    console.log(chatsToDelete);
+
     for (const chat of chatsToDelete) {
       let otherUserID;
+
       if (String(chat.user1) === userId) {
         otherUserID = chat.user2;
       } else {
         otherUserID = chat.user1;
       }
 
+      console.log(otherUserID);
+
       const otherUser = await User.findById(otherUserID);
-      const otherUserChats = otherUser?.chats.filter((c) => c !== chat._id);
+      console.log(otherUser);
+
+      console.log(otherUser?.chats);
+
+      let otherUserChats = otherUser?.chats ?? [];
+
+      otherUserChats = otherUserChats.filter(
+        (chatId) => chatId.toString() !== chat._id.toString()
+      );
 
       await User.findByIdAndUpdate(otherUserID, { chats: otherUserChats });
 
