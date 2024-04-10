@@ -69,6 +69,12 @@ const userSchema = new mongoose.Schema<IUser>({
       type: mongoose.Schema.Types.ObjectId,
       ref: "User",
     }
+  ], 
+  reportedPosts: [
+    {
+      type: mongoose.Schema.Types.ObjectId,
+      ref: "Post",
+    }
   ]
 });
 

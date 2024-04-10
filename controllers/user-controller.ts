@@ -177,13 +177,70 @@ export const blockUser = async (request: Request, response: Response) => {
       return response.status(400).json({ error: "Cannot block yourself" });
     }
 
+    const isBlocked = user.blockedUsers.includes(blockId);
+
     await User.updateOne(
       { _id: userId },
-      { $addToSet: { blockedUsers: blockId } }
+      isBlocked
+        ? { $pull: { blockedUsers: blockId } }
+        : { $addToSet: { blockedUsers: blockId } }
     );
-    return response.status(200).json({ message: "User blocked successfully" });
+
+    return response.status(200).json({
+      message: isBlocked
+        ? "User unblocked successfully"
+        : "User blocked successfully",
+    });
   } catch (error) {
     console.error("Failed to block user:", error);
     return response.status(500).json({ error: "InternalServerError" });
   }
 };
+
+export const reportPost = async (request: Request, response: Response) => {
+  const { userId, postId } = request.body;
+
+  if (!userId || !postId) {
+    return response.status(400).json({ error: CommonErrors.BadRequest });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const post = await Post.findById(postId);
+
+    if (!user || !post) {
+      return response.status(404).json({ error: CommonErrors.NotFound });
+    }
+
+    await User.updateOne(
+      { _id: userId },
+      { $addToSet: { reportedPosts: postId } }
+    );
+
+    await Post.updateOne(
+      { _id: postId },
+      { $addToSet: { reportedBy: userId } }
+    );
+
+    if (post.reportedBy.length >= 5) {
+      const creatorId = post.userId;
+      const reportedIdList = post.reportedBy;
+      await Post.deleteOne({ _id: postId });
+      for(const userReportedId of reportedIdList) {
+        await User.updateOne(
+          { _id: userReportedId },
+          { $pull: { reportedPosts: postId } }
+        );
+      }
+      await User.updateOne(
+        { _id: creatorId },
+        { $pull: { posts: postId } }
+      )
+    }
+
+    return response.status(200).json({ message: "Post reported successfully" });
+  } catch (error) {
+    console.error("Failed to block user:", error);
+    return response.status(500).json({ error: "InternalServerError" });
+  }
+}; 

@@ -6,7 +6,8 @@ import {
   createUser,
   updateUser,
   deleteUser,
-  blockUser
+  blockUser,
+  reportPost
 } from "../controllers/user-controller";
 import { verifyHmacSignature } from "../middleware/verifySignature";
 
@@ -19,3 +20,4 @@ userRouter.post("/", verifyHmacSignature, createUser);
 userRouter.patch("/:userId", verifyHmacSignature, updateUser);
 userRouter.delete("/:userId", verifyHmacSignature, deleteUser);
 userRouter.post("/blockUser", verifyHmacSignature, blockUser);
+userRouter.post("/reportPost", verifyHmacSignature, reportPost);

@@ -31,6 +31,12 @@ const postSchema = new mongoose.Schema<IPost>(
       type: Date,
       default: Date.now,
     },
+    reportedBy: [
+      {
+        type: mongoose.Schema.Types.ObjectId,
+        ref: "User"
+      }
+    ]
   },
   {
     timestamps: true,

@@ -15,6 +15,7 @@ export interface IUser extends Document {
   schedule: string[];
   approved: boolean;
   blockedUsers: mongoose.Types.ObjectId[];
+  reportedPosts: mongoose.Types.ObjectId[];
 }
 
 export interface IPost extends Document {
@@ -25,6 +26,7 @@ export interface IPost extends Document {
   image?: string;
   likes: mongoose.Types.ObjectId[];
   dateCreated: Date;
+  reportedBy: mongoose.Types.ObjectId[];
 }
 
 export interface IMessage extends Document {
