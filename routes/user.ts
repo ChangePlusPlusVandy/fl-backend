@@ -6,6 +6,7 @@ import {
   createUser,
   updateUser,
   deleteUser,
+  blockUser
 } from "../controllers/user-controller";
 import { verifyHmacSignature } from "../middleware/verifySignature";
 
@@ -17,3 +18,4 @@ userRouter.get("/firebase/:firebaseId", verifyHmacSignature, getUser);
 userRouter.post("/", verifyHmacSignature, createUser);
 userRouter.patch("/:userId", verifyHmacSignature, updateUser);
 userRouter.delete("/:userId", verifyHmacSignature, deleteUser);
+userRouter.post("/blockUser", verifyHmacSignature, blockUser);
