@@ -157,3 +157,33 @@ export const deleteUser = async (request: Request, response: Response) => {
     return response.status(500).json({ error: e });
   }
 };
+
+export const blockUser = async (request: Request, response: Response) => {
+  const { userId, blockId } = request.body;
+
+  if (!userId || !blockId) {
+    return response.status(400).json({ error: CommonErrors.BadRequest });
+  }
+
+  try {
+    const user = await User.findById(userId);
+    const blockUser = await User.findById(blockId);
+
+    if (!user || !blockUser) {
+      return response.status(404).json({ error: CommonErrors.NotFound });
+    }
+
+    if (userId === blockId) {
+      return response.status(400).json({ error: "Cannot block yourself" });
+    }
+
+    await User.updateOne(
+      { _id: userId },
+      { $addToSet: { blockedUsers: blockId } }
+    );
+    return response.status(200).json({ message: "User blocked successfully" });
+  } catch (error) {
+    console.error("Failed to block user:", error);
+    return response.status(500).json({ error: "InternalServerError" });
+  }
+};

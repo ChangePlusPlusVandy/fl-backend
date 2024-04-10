@@ -14,6 +14,7 @@ export interface IUser extends Document {
   chats: mongoose.Types.ObjectId[];
   schedule: string[];
   approved: boolean;
+  blockedUsers: mongoose.Types.ObjectId[];
 }
 
 export interface IPost extends Document {
