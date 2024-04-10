@@ -1,5 +1,8 @@
 import { Request, Response } from "express";
 import { User } from "../models/user.model";
+import { Post } from "../models/post.model";
+import { Chat } from "../models/chat.model";
+import { Message } from "../models/message.model";
 import { CommonErrors } from "../utils/common-errors";
 
 // GET /
@@ -108,6 +111,30 @@ export const deleteUser = async (request: Request, response: Response) => {
 
     if (!user) {
       return response.status(400).json({ error: CommonErrors.NotFound });
+    }
+
+    await Post.deleteMany({ userId });
+
+    const chatsToDelete = await Chat.find({
+      $or: [{ user1: userId }, { user2: userId }],
+    });
+
+    for (const chat of chatsToDelete) {
+      let otherUserID;
+      if (String(chat.user1) === userId) {
+        otherUserID = chat.user2;
+      } else {
+        otherUserID = chat.user1;
+      }
+
+      const otherUser = await User.findById(otherUserID);
+      const otherUserChats = otherUser?.chats.filter((c) => c !== chat._id);
+
+      await User.findByIdAndUpdate(otherUserID, { chats: otherUserChats });
+
+      await Message.deleteMany({ chatId: chat._id });
+
+      await Chat.findByIdAndDelete(chat._id);
     }
 
     const result = await User.deleteOne({ _id: user._id });
