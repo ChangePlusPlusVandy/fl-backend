@@ -7,7 +7,7 @@ import {
   updateUser,
   deleteUser,
   blockUser,
-  reportPost
+  reportPost,
 } from "../controllers/user-controller";
 import { verifyHmacSignature } from "../middleware/verifySignature";
 
